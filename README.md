@@ -1,4 +1,29 @@
 
+## 시간복잡도
+
+- 시간제한 1초당 약 2천만번 연산
+
+  
+- O(1)
+  - 딕셔너리(해시 테이블)에서 `in` 연산
+  - 리스트/Queue에서 `pop()`
+- O(logn)
+  - 이진 탐색(Binary Search)
+- O(n)
+  - 투 포인터
+  - 리스트에서 `in` 연산
+  - 리스트에서 `pop(1)`
+- O(nlogn)
+  - 내장함수 sort(), sorted()
+  - 병합 정렬, 퀵 정렬
+- O(n^2)
+  - 버블 정렬
+- O(2^n)
+- O(n!)
+
+
+<hr>
+
 ## 입력 받기
 
 - 정수 1개<br>
@@ -317,3 +342,49 @@ def binary_search(arr, target, start, end):
     
 binary_search(arr, target, 0, len(arr)-1)  # 2
 ```
+
+<hr>
+
+## 투 포인터
+
+: start 포인터와 end 포인터를 설정하고 값의 범위를 따져 포인터를 한칸씩 이동시킴
+
+- 시간복잡도: O(n)
+- 시간복잡도가 낮기 때문에, 주로 값의 범위가 크거나 갯수가 많을 때 사용함
+
+
+- 예제1. k를 연속된 수들의 합으로 나타낼 수 있는 경우의 수
+  ```python
+  start, end = 1, 1 # 자연수여야하므로 1로 할당
+  sum = 1
+  answer = 1    # k 하나로만 구성된 경우를 포함
+  while end < k:
+      if sum < k:
+          end += 1
+          sum += end
+      elif sum == k:
+          end += 1
+          sum += end
+          answer += 1
+      else:
+          sum -= start
+          start += 1
+  print(answer)
+  ```
+- 예제2. k를 두 수의 합으로 나타낼 수 있는 경우의 수
+  ```python
+  numbers = [2, 6, 4, 1, 5, 3]
+  numbers.sort()    # [1, 2, 3, 4, 5, 6]
+  
+  start, end = 0, len(numbers)-1
+  answer = 0
+  while start < end:
+      if numbers[start] + numbers[end] > k:
+          end -= 1
+      elif numbers[start] + numbers[end] == k:
+          answer += 1
+          end -= 1
+      else:
+          start += 1
+  print(answer)
+  ```
