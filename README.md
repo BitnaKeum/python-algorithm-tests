@@ -12,7 +12,7 @@
 - O(n)
   - 투 포인터
   - 리스트에서 `in` 연산
-  - 리스트에서 `pop(1)`
+  - 리스트에서 `pop(n)`
 - O(nlogn)
   - 내장함수 sort(), sorted()
   - 병합 정렬, 퀵 정렬
@@ -25,7 +25,7 @@
 <hr>
 
 <details>
-<summary><b>입력 받기</b></summary>
+<summary><b> 입력 받기</b></summary>
 
 - 정수 1개<br>
   `num = int(input())` <br>
@@ -62,29 +62,114 @@
   ```python
   # 여러 줄을 반복해서 입력받아야할 때, input()을 사용하면 시간초과 에러가 발생하므로 sys.stdin.readline()를 사용
   import sys
-  input_data = sys.stdin.readline().rstrip()  # rstrip()은 개행문자를 제거하기 위함
+  data = sys.stdin.readline().rstrip()  # rstrip()은 개행문자를 제거하기 위함
   ```
-</details>
-<hr>
 
-
-
-<details>
-<summary><b>Slicing</b></summary>
-
-- 리스트 슬라이싱 결과 값은 리스트형
-- 실제 범위를 벗어나도 에러가 발생하지 않음!
   ```python
-  lis = [2,4,6,8]
-  lis[3:10]  # [8]
+  import sys
+  input = sys.stdin.readline
+  data = input()
   ```
 
+- +_효율적으로 출력하기_
+    ```python
+    import sys
+    print = sys.stdout.write
+    print('내용')
+    ```
 </details>
 <hr>
 
 
+
 <details>
-<summary><b>collections</b></summary>
+<summary><b> Python 기본 문법</b></summary>
+
+- <b>자주 쓰는 함수</b>
+    - `insert(idx, value)`
+
+<br>
+
+- <b>Slicing</b>
+    - 리스트 슬라이싱 결과 값은 리스트형
+    - 실제 범위를 벗어나도 에러가 발생하지 않음!
+      ```python
+      lis = [2,4,6,8]
+      lis[3:10]  # [8]
+      ```
+<br>
+
+- <b> List Comprehension </b>
+
+  - 기본 사용법
+    ```python
+    arr = [1,2,3,4,5]
+    result = [x for x in arr]  # [1,2,3,4,5]
+    ```
+  - if문 사용
+    ```python
+    arr = [1,2,3,4,5]
+    result = [x for x in arr if x < 3]  # [1,2]
+    ```
+  - if ~ else문 사용
+    ```python
+    arr = [5,3,2,7,1]
+    result = ['small' if x < 3 else 'big' for x in arr]  # ['big', 'big', 'small', 'big', 'small']
+    ```
+    
+<br>
+
+- <b>리스트 → 문자열 </b>
+
+  : 문자열이 들어 있는 리스트를 하나의 문자열로 합치기
+
+    `''.join(리스트)`
+    
+<br>
+
+- <b> 정렬하기 </b>
+
+  - 리스트 정렬
+  
+    `리스트.sort()` : 리스트에 정렬된 값을 저장<br>
+    `sorted(리스트)` : 리스트 값은 변하지 않고, 정렬된 값만 반환
+    
+    <br>
+    
+  - 문자열 정렬
+  
+    `sorted(문자열)` : 문자열 값은 변하지 않고, 정렬된 값만 리스트로 반환<br>
+    _+ 정렬된 리스트를 문자열로 바꾸려면? `''.join(리스트)`<br>_
+      
+    <br>
+    
+  - `sort()`의 조건 지정하는 방법
+
+      `lis = ["5e", "3a", "1a"]`일 때,
+      
+      1. 표현식 1개: 해당 표현식을 기준으로 정렬<br>
+         `lis.sort(key=lambda x: x[1])    # ['3a', '1a', '5e']`
+      
+      2) 표현식 2개: 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬<br>
+        `lis.sort(key=lambda x: (x[1], x[0]))    # ['1a', '3a', '5e']`
+         
+<br>
+
+- <b> 문자열이 알파벳/숫자인지 확인 </b>
+
+  - 숫자로만 이루어져 있는지 확인: `문자열.isdecimal()` 
+    
+    <br>
+  - 알파벳으로만 이루어져 있는지 확인: `문자열.isalpha()`
+    
+    <br>
+  - 숫자+알파벳으로 이루어져 있는지 확인: `문자열.isalnum()`
+
+</details><hr>
+
+
+<details>
+<summary><b> collections 모듈</b></summary>
 
 - `defaultdict`
   - default 값을 설정하여 딕셔너리를 생성
@@ -142,55 +227,6 @@
 
 
 <details>
-<summary><b> 리스트 -> 문자열 </b></summary>
-
-  - 문자열이 들어 있는 리스트를 하나의 문자열로 합칠 때 사용
-
-  `''.join(리스트)`
-
-</details>
-<hr>
-
-<details>
-<summary><b> List Comprehension </b></summary>
-
-  - 기본 사용법
-    ```python
-    arr = [1,2,3,4,5]
-    result = [x for x in arr]  # [1,2,3,4,5]
-    ```
-  - if문 사용
-    ```python
-    arr = [1,2,3,4,5]
-    result = [x for x in arr if x < 3]  # [1,2]
-    ```
-  - if ~ else문 사용
-    ```python
-    arr = [5,3,2,7,1]
-    result = ['small' if x < 3 else 'big' for x in arr]  # ['big', 'big', 'small', 'big', 'small']
-    ```
-    
-</details>
-<hr>
-
-<details>
-<summary><b> 정렬하기 </b></summary>
-
-  - 리스트 정렬
-  
-    `리스트.sort()` : 리스트에 정렬된 값을 저장<br>
-    `sorted(리스트)` : 리스트 값은 변하지 않고, 정렬된 값만 반환<br>
-  
-  
-  - 문자열 정렬
-  
-    `sorted(문자열)` : 문자열 값은 변하지 않고, 정렬된 값만 리스트로 반환<br>
-    _+ 정렬된 리스트를 문자열로 바꾸려면? `''.join(리스트)`<br>_
-
-</details><hr>
-
-
-<details>
 <summary><b> n진법 수를 10진법으로 변환하기 </b></summary>
 
   `int(수 문자열, n)`
@@ -204,43 +240,6 @@
 <summary><b> 소수 찾기 </b></summary>
 
   - 제일 먼저 2로 나누어 떨어지는지 확인한 후,  3부터 2씩 건너뛰면서 확인한다 (for 효율성)
-
-</details><hr>
-
-
-<details>
-<summary><b> 문자열이 알파벳/숫자인지 확인 </b></summary>
-
-  - 숫자로만 이루어져 있는지 확인
-  
-    `문자열.isdecimal()`
-
-    
-  - 알파벳으로만 이루어져 있는지 확인
-  
-    `문자열.isalpha()`
-
-    
-  - 숫자+알파벳으로 이루어져 있는지 확인
-  
-    `문자열.isalnum()`
-
-</details><hr>
-
-
-<details>
-<summary><b> sort()의 조건 지정하기 </b></summary>
-
-  `lis = ["5e", "3a", "1a"]`일 때,
-  
-  1) 표현식 한 개
-    
-  -  해당 표현식을 기준으로 정렬한다.<br>
-     `lis.sort(key=lambda x: x[1])    # ['3a', '1a', '5e']`
-  
-  2) 표현식 두 개
-  - 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬한다.<br>
-    `lis.sort(key=lambda x: (x[1], x[0]))    # ['1a', '3a', '5e']`
 
 </details><hr>
 
@@ -281,7 +280,7 @@
 
 
 <details>
-<summary><b>Queue</b></summary>
+<summary><b> Queue</b></summary>
 
 - FIFO (First In First Out)
 - 일반적으로 `deque`를 사용해 구현
@@ -453,3 +452,110 @@
     ```
 
 </details><hr>
+
+
+<details>
+<summary><b> 정렬 알고리즘</b></summary>
+
+1. <b>버블(bubble) 정렬</b>
+
+    : 인접 값끼리 비교해서 swap하며 정렬하는 방식
+   
+    - 시간복잡도: O(n^2)
+    ```python
+    arr = [3,5,4,1,2]
+    n = len(arr)
+    for i in range(n-1):
+        for j in range(n-1-i):
+            if arr[j] > arr[j+1]:   # swap
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    ```
+
+
+2. <b>선택(selection) 정렬</b>
+
+    : 남은 부분에서 최소값을 찾고 남은 부분의 맨 앞에 있는 데이터와 swap하며 정렬하는 방식 (최대값도 가능)
+
+    - 시간복잡도: O(n^2)
+    - 구현이 복잡하고 시간복잡도도 높아 코테에서 잘 사용하지 않음!
+
+
+3. <b>삽입(insertion) 정렬</b>
+
+    : 특정 값을 이미 정렬된 영역의 값들과 하나씩 비교해서 swap하면서 적절한 위치에 삽입하는 방식
+
+    - i는 index 1부터 오른쪽으로, j는 index i부터 왼쪽으로 이동.
+    - 시간복잡도: O(n^2)
+    ```python
+    arr = [3,5,4,1,2]
+    n = len(arr)
+    for i in range(1, n):
+        for j in range(i, 0, -1):
+            if arr[j-1] > arr[j]:   # swap
+                arr[j-1], arr[j] = arr[j], arr[j-1]
+            else:
+                break
+    ```
+    
+
+4. <b>퀵(quick) 정렬</b>
+
+    : pivot을 선정해 해당 값을 기준으로 대소비교하면서 정렬하는 방식
+
+    - 재귀함수 이용
+    - 시간복잡도: O(nlogn) _(로 알고 있으면 되고 최악의 경우 O(n^2)임)_
+    
+    ```python
+    arr = [3,5,4,1,2]
+    
+    def quick_sort(arr):
+        if len(arr) <= 1:
+            return arr
+        
+        pivot = arr[0]  # 첫번째 원소를 pivot으로 설정
+        small_arr = [x for x in arr[1:] if x <= pivot]
+        large_arr = [x for x in arr[1:] if x > pivot]
+        
+        return quick_sort(small_arr) + [pivot] + quick_sort(large_arr)
+    
+    print(quick_sort(arr))  # [1,2,3,4,5]
+    ```
+
+
+5. <b>병합(merge) 정렬</b>
+
+    : 부분집합을 두개씩 나누고, 이미 정렬된 부분집합들을 병합하며 정렬하는 방식
+
+    - 시간복잡도: O(nlogn)
+    - **코딩테스트에서 자주 등장**
+    
+    ```python
+    arr = [3,5,4,1,2]
+    
+    def merge_sort(arr):
+        if len(arr) <= 1:
+            return arr
+    
+        mid = len(arr) // 2
+        left_arr = merge_sort(arr[:mid])
+        right_arr = merge_sort(arr[mid:])
+    
+        merged_arr = []
+        l, r = 0, 0
+        while l < len(left_arr) and r < len(right_arr):
+            if left_arr[l] < right_arr[r]:
+                merged_arr.append(left_arr[l])
+                l += 1
+            else:
+                merged_arr.append(right_arr[r])
+                r += 1
+        if l < len(left_arr):
+            merged_arr += left_arr[l:]
+        else:
+            merged_arr += right_arr[r:]
+            
+        return merged_arr
+    ```
+
+    
+</details>
