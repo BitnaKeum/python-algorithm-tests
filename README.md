@@ -86,7 +86,13 @@
 <summary><b> Python 기본 문법</b></summary>
 
 - <b>자주 쓰는 함수</b>
-    - `insert(idx, value)`
+    - `리스트.insert(idx, value)`
+
+    - 재귀함수의 최대 호출 횟수 제한 늘리기 (default: 3000)
+        ```python
+        import sys
+        sys.setrecursionlimit(10000)
+        ```
 
 <br>
 
@@ -165,6 +171,7 @@
     <br>
   - 숫자+알파벳으로 이루어져 있는지 확인: `문자열.isalnum()`
 
+
 </details><hr>
 
 
@@ -239,7 +246,26 @@
 <details>
 <summary><b> 소수 찾기 </b></summary>
 
-  - 제일 먼저 2로 나누어 떨어지는지 확인한 후,  3부터 2씩 건너뛰면서 확인한다 (for 효율성)
+- 2부터 제곱근까지 나누어떨어지는지 확인
+
+    ```python
+    # 기본 코드
+    def isPrime(num):
+        for i in range(2, int(num**0.5) + 1):
+            if num % i == 0:
+                return False
+        return True
+    ```
+    ```python
+    # 더 효율적인 코드
+    def isPrime(num):
+        if num % 2 == 0:
+            return False
+        for i in range(3, int(num**0.5) + 1, 2):
+            if num % i == 0:
+                return False
+        return True
+    ```
 
 </details><hr>
 
@@ -269,12 +295,44 @@
 
 
 <details>
-<summary><b> BFS/DFS </b></summary>
+<summary><b> BFS / DFS </b></summary>
 
-  - BFS
-    - Queue 구조로 구현 (`deque` 주로 사용, `append()`/`popleft()`)
-  - DFS
-    - Stack 구조로 구현 (리스트 사용, `append()`/`pop()`) or 재귀함수로 구현
+  - <b>DFS</b>
+    
+    : 현재 노드의 인접 노드 중 방문하지 않은 것을 모두 방문, 이 과정을 반복
+    - **재귀함수** or Stack을 이용해 구현\
+    - 시간복잡도: O(V+E)
+        - V는 노드 수, E는 간선 수
+    
+    ```python
+    # 재귀함수로 구현한 코드
+    
+    def dfs(graph, node, visited):
+        visited[node] = True
+        print(node, end=' ')
+    
+        for adj_node in graph[node]:
+            if not visited[adj_node]:
+                dfs(graph, adj_node, visited)
+    
+    n = 5
+    graph = [
+        [],     # [0]은 사용하지 않음
+        [2,3],
+        [1,4,5],
+        [1],
+        [2,5],
+        [2,4],
+    ]
+    visited = [False] * (n+1)   # [0]은 사용하지 않음
+    dfs(graph, 1, visited)      # 시작 노드는 1
+    # 출력: 1 2 4 5 3
+    ```
+
+<br>
+      
+  - <b>BFS</b>
+    - Queue를 이용해 구현
  
 </details><hr>
 
