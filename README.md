@@ -344,41 +344,65 @@
 - 일반적으로 `deque`를 사용해 구현
   - 삽입: `append()` (`appendleft()`도 있음)
   - 제거: `popleft()` (`pop()`도 있음)
+    ```python
+    from collections import deque
+    
+    queue = deque()
+    queue.append(3)
+    queue.append(1)
+    queue.popleft() # 3
+    ```
   
 
 - <b>우선순위 큐 (Priority Queue)</b>
-  - 저장된 값들을 **정렬**하고, 가장 작은 값을 반환하는 특징
-  - 삽입: `put()`
-  - 제거: `get()`
-  - 오름차순 말고 다른 기준으로 반환하고 싶으면, `(우선순위, 값)` 튜플로 저장
-    - ex: `(1, 'lemon')`
-    - 우선순위가 동일한 튜플들은 값에 따라 정렬됨
+  - 단순히 먼저 들어온 값을 반환하지 않고, 저장된 값들을 **정렬**해서 가장 작은 값을 반환함
+  - 일반적으로 `PriorityQueue`를 사용해 구현
+    - 삽입: `put()`
+    - 제거: `get()`
+    - 오름차순 말고 다른 기준으로 반환하고 싶으면, `(우선순위, 값)` 튜플로 저장
+      - ex: `(1, 'lemon')`
+      - 우선순위가 동일한 튜플들은 값에 따라 정렬됨
+    ```python
+    from queue import PriorityQueue
     
-  ```python
-  from queue import PriorityQueue
+    queue = PriorityQueue()
+    
+    queue.put(3)
+    queue.put(1)
+    queue.put(5)
+    print(queue.get())  # 1
+    print(queue.get())  # 3
+    print(queue.get())  # 5
+    ```
+      
+      ```python
+      from queue import PriorityQueue
+      
+      queue = PriorityQueue()
+      
+      queue.put((2, 'apple'))
+      queue.put((1, 'lemon'))
+      queue.put((1, 'blueberry'))
+      print(queue.get())  # (1, 'blueberry')
+      print(queue.get())  # (1, 'lemon')
+      print(queue.get())  # (2, 'apple')
+      ```
   
-  queue = PriorityQueue()
-  
-  queue.put(3)
-  queue.put(1)
-  queue.put(5)
-  print(queue.get())  # 1
-  print(queue.get())  # 3
-  print(queue.get())  # 5
-  ```
-  
-  ```python
-  from queue import PriorityQueue
-  
-  queue = PriorityQueue()
-  
-  queue.put((2, 'apple'))
-  queue.put((1, 'lemon'))
-  queue.put((1, 'blueberry'))
-  print(queue.get())  # (1, 'blueberry')
-  print(queue.get())  # (1, 'lemon')
-  print(queue.get())  # (2, 'apple')
-  ```
+      ```python
+      import heapq
+      
+      heap = []
+      heapq.heappush(heap, 3)
+      heapq.heappush(heap, 1)
+      heapq.heappop(heap)   # 1
+      ```
+      ```python
+      import heapq
+      
+      heap = [3,5,1,4,2]
+      heapq.heapify(heap)
+      heapq.heappop(heap)   # 1
+      ```
 
 </details><hr>
 
@@ -412,7 +436,7 @@
 
 
 <details>
-<summary><b> Binary Search (이진 탐색)</b></summary>
+<summary><b> 이진 탐색 (Binary Search)</b></summary>
 
   : start, mid, end를 사용하면서, mid의 값이 찾는 값과 일치하는지 확인을 반복하는 방법
   - 이진 탐색을 사용하려면 리스트가 **정렬**되어 있어야함!
@@ -616,5 +640,19 @@
         return merged_arr
     ```
 
-    
+</details><hr>
+
+<details>
+<summary><b> 그리디(Greedy) 알고리즘</b></summary>
+
+: 현재 상태에서 최선의 선택지가 전체에서 최선의 선택지라고 가정하는 알고리즘
+
+- 수행 과정
+    1. 현재 상태에서 최선의 해를 선택한다.
+    2. 선택한 해가 전체 문제의 제약 조건에 벗어나지 않는지 확인한다.
+    3. 현재까지 선택한 해의 집합이 전체 문제를 해결할 수 있는지 확인한다. <br>
+       해결하지 못한다면 1번으로 돌아가 반복한다.
+       
+- 대표 문제: 최소 갯수의 동전을 사용해 주어진 금액 만들기
+
 </details>
