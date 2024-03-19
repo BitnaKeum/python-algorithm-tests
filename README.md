@@ -246,7 +246,7 @@
 <details>
 <summary><b> 소수 찾기 </b></summary>
 
-- 2부터 제곱근까지 나누어떨어지는지 확인
+- 2부터 제곱근까지 나누어떨어지는지 확인하기
 
     ```python
     # 기본 코드
@@ -266,6 +266,29 @@
                 return False
         return True
     ```
+
+- 에라토스테네스의 체
+  
+    : 주어진 범위의 값들 중 소수를 모두 찾아야할 때, 2부터의 배수들을 모두 제외시키는 방법
+
+    ```python
+    # 1부터 100까지의 수 중 소수를 출력하시오.
+    
+    n = 100
+    primes = [True] * (n+1) # [0]는 사용안함
+    primes[1] = False   # 1은 False 처리
+    
+    for i in range(2, int(n**0.5)+1): # 2 ~ √n
+        # i의 배수들을 False 처리하기 (i 자신은 X)
+        for idx in range(i+i, n+1, i):
+            primes[idx] = False
+    
+    # 소수들을 출력
+    for idx in range(1, n+1):
+        if primes[idx]:
+            print(idx)
+    ```
+
 
 </details><hr>
 
@@ -642,6 +665,7 @@
 
 </details><hr>
 
+
 <details>
 <summary><b> 그리디(Greedy) 알고리즘</b></summary>
 
@@ -655,4 +679,49 @@
        
 - 대표 문제: 최소 갯수의 동전을 사용해 주어진 금액 만들기
 
-</details>
+</details><hr>
+
+
+<details>
+<summary><b> 유니온 파인드 (union-find)</b></summary>
+
+- union(a, b)
+  - a 노드의 대표 노드와 b 노드의 대표 노드 중, 더 큰 대표 노드를 더 작은 대표 노드에 연결시킴
+- find(a)
+  - a 노드의 대표 노드를 반환
+  - 재귀를 통해서 대표 노드를 찾음
+  - 대표 노드를 찾은 후, 재귀를 빠져나오면서 거치는 모든 노드의 대표 노드를 업데이트함
+    => 그래프를 정돈하고 시간 복잡도를 줄이는 역할을 함
+    
+- 구현 코드
+    ```python
+    parents = list(range(n + 1))    # 각 노드의 대표 노드를 의미
+  
+    def find(a):
+        if a == parents[a]:  # 대표노드
+            return a
+        else:
+            parent_a = find(parents[a])
+            parents[a] = parent_a  # 대표노드 업데이트
+            return parent_a
+      
+    def union(a, b):
+        parent_a = find(a)
+        parent_b = find(b)
+        
+        if parent_a <= parent_b:
+            parents[parent_b] = parent_a
+        else:
+            parents[parent_a] = parent_b
+        # 아래처럼 작성하지 않게 주의!! 대표노드끼리 연결을 해야함
+        # if a <= b:
+        #     parents[b] = parent_a
+        # else:
+        #     parents[a] = parent_b
+    ```
+
+- 자주 실수하는 부분
+    - find 연산에서, 재귀를 빠져나오면서 모든 노드의 대표 노드를 꼭 업데이트해야 함
+    - union 연산에서, a와 b 노드끼리 연결하는 게 아니라 a와 b의 대표노드끼리 연결해야 함
+    
+</details><hr>
