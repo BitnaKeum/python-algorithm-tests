@@ -72,6 +72,7 @@
   ```
 
 - +_효율적으로 출력하기_
+    - 주의) `print()` 안에 정수를 넣으면 TypeError가 발생하므로 `str()`로 형변환 해줘야함
     ```python
     import sys
     print = sys.stdout.write
@@ -385,6 +386,7 @@
     - 오름차순 말고 다른 기준으로 반환하고 싶으면, `(우선순위, 값)` 튜플로 저장
       - ex: `(1, 'lemon')`
       - 우선순위가 동일한 튜플들은 값에 따라 정렬됨
+    - 주의) `while queue:` 하면 항상 True이므로 `while queue.qsize() > 0:`으로 사용
     ```python
     from queue import PriorityQueue
     
@@ -725,3 +727,135 @@
     - union 연산에서, a와 b 노드끼리 연결하는 게 아니라 a와 b의 대표노드끼리 연결해야 함
     
 </details><hr>
+
+
+<details>
+<summary><b> 위상 정렬</b></summary>
+
+: 사이클이 없는 방향 그래프에서 노드 순서를 찾는 알고리즘
+
+- 정렬 결과가 유일하지는 않음
+- 시간복잡도: O(V+E)
+
+
+- 구현 방법
+    1. 그래프와 별개로, 자기 자신을 가리키는 간선의 수를 의미하는 진입차수(in-degree) 리스트를 만듦
+    2. 진입차수가 0인 노드들을 queue에 삽입
+    3. queue에서 노드를 뽑고 (결과값에 저장)<br>
+      해당 노드가 가리키는 노드들의 진입차수를 1 감소시킴<br>
+      감소 후 진입차수가 0이 된 노드들을 queue에 삽입
+    4. queue가 빌 때까지 3번 작업을 반복
+
+    ```python
+    from collections import deque
+    
+    n = 5
+    graph = [
+        [],     
+        [2,3],  # node 1
+        [4,5],  # node 2
+        [4],    # node 3
+        [5],    # node 4
+        [],     # node 5
+    ]
+    
+    # 1번 작업
+    indegree = [0, 0, 1, 1, 2, 2]
+    
+    # 2번 작업
+    queue = deque()
+    for i in range(1, n+1):
+        if indegree[i] == 0:
+            queue.append(i)
+            
+    while queue:
+        # 3번 작업
+        node = queue.popleft()
+        print(node, end=' ')    # 결과 값 출력
+        for next_node in graph[node]:
+            indegree[next_node] -= 1
+            if indegree[next_node] == 0:
+                queue.append(next_node)
+    ```
+
+</details><hr>
+
+
+<details>
+<summary><b> 다익스트라 (Dijkstra) 알고리즘</b></summary>
+
+: 특정 노드와 다른 모든 노드들 간의 **최단 거리**를 구할 때 사용
+
+- 조건
+  - 노드 간 거리(가중치)가 주어지는 방향 그래프여야 함 
+  - 거리(가중치)는 모두 양수여야 함
+- 시간복잡도: O(ElogV)
+
+
+- 구현 방법
+    1. (노드, 거리)를 인접 리스트에 저장해 그래프를 만든다.
+    2. `distance` 리스트를 만들고, 출발 노드의 거리는 0, 다른 노드들의 거리는 INF로 초기화한다.
+    3. 거리가 가장 작은 노드를 선택한다.
+       - 이를 위해 **우선순위 큐**를 사용해야 함 (`PriorityQueue` / `heapq`)
+       - 큐에 (거리, 노드) 순으로 저장해야 함
+    4. 선택한 노드에 연결된 노드들에 대해 거리를 업데이트한다.
+        - `distance[adj_node]`과 `distance[node] + adj_dist` 중 더 작은 것
+    5. 모든 노드가 선택될 때까지 3~4번을 반복한다.
+    
+
+- 코드1: `heapq`로 구현
+    ```python
+    import heapq
+    
+    graph = [[] for _ in range(n + 1)]
+    for _ in range(d):
+        src_node, tgt_node, dist = map(int, input().split())
+        graph[src_node].append((tgt_node, dist))
+    
+    INF = 10 ** 5
+    distance = [INF] * (n + 1)
+    
+    # priority queue 만들기
+    queue = []
+    heapq.heappush(queue, (0, start))   # (거리, 노드) 순으로 저장
+    distance[start] = 0
+    
+    # 다익스트라 알고리즘
+    while queue:
+        dist, node = heapq.heappop(queue)  # 가장 거리가 작은 노드 반환
+        if dist > distance[node]:   # invalid
+            continue
+        for adj_node, adj_dist in graph[node]:
+            if dist + adj_dist < distance[adj_node]:  # 최단 거리 업데이트
+                distance[adj_node] = dist + adj_dist
+                heapq.heappush(queue, (distance[adj_node], adj_node))   # (거리, 노드) 순으로 저장
+    ```
+  
+- 코드2: `PriorityQueue`로 구현
+    ```python
+    from queue import PriorityQueue
+    
+    graph = [[] for _ in range(n + 1)]
+    for _ in range(d):
+        src_node, tgt_node, dist = map(int, input().split())
+        graph[src_node].append((tgt_node, dist))
+    
+    INF = 10 ** 5
+    distance = [INF] * (n + 1)
+    
+    # priority queue 만들기
+    queue = PriorityQueue()
+    queue.put((0, start))   # (거리, 노드) 순으로 저장
+    distance[start] = 0
+    
+    # 다익스트라 알고리즘
+    while queue.qsize() > 0:
+        dist, node = queue.get()  # 가장 거리가 작은 노드 반환
+        if dist > distance[node]:   # invalid
+            continue
+        for adj_node, adj_dist in graph[node]:
+            if dist + adj_dist < distance[adj_node]:  # 최단 거리 업데이트
+                distance[adj_node] = dist + adj_dist
+                queue.put((distance[adj_node], adj_node))   # (거리, 노드) 순으로 저장
+    ```
+</details>
