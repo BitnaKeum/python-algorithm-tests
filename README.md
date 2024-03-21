@@ -439,23 +439,40 @@
   - Heap은 완전이진트리이므로 높이가 logn => 모든 노드에 대해 연산을 해야하므로 시간복잡도는 O(nlogn)
   - pop 연산을 하면 루트 노드의 값이 반환됨 (min heap이면 최소값, max heap이면 최대값)
   - heapq 모듈은 min heap만을 지원함. max heap을 사용해야한다면 원소를 모두 음수로 만들어서 사용하면 됨.
-  ```python
-  import heapq
-  
-  # heap을 만들면서 원소를 하나씩 집어넣기
-  heap = []
-  heapq.heappush(heap, 1)
-  heapq.heappush(heap, 2)
-  heapq.heappop(heap)  # 1
-  ```
-  ```python
-  import heapq
-  
-  # 리스트를 한번에 heap으로 만들기
-  heap = [1, 2]
-  heapq.heapify(heap)
-  heapq.heappop(heap)  # 1
-  ```
+
+    ```python
+    import heapq
+    
+    # heap을 만들면서 원소를 하나씩 집어넣기
+    heap = []
+    heapq.heappush(heap, 1)
+    heapq.heappush(heap, 2)
+    heapq.heappop(heap)  # 1
+    ```
+    ```python
+    import heapq
+    
+    # 리스트를 한번에 heap으로 만들기
+    heap = [1, 2]
+    heapq.heapify(heap)
+    heapq.heappop(heap)  # 1
+    ```
+
+</details><hr>
+
+
+<details>
+<summary><b> Tree</b></summary>
+
+- **이진 트리**
+    - 자식 노드의 수가 1개 또는 2개로 구성된 트리
+    - 일반적으로 리스트로 구현
+        - 루트 노드의 index는 1
+        - index로 노드를 이동할 때
+            - 루트 노드로 이동 => `index = 1`
+            - 부모 노드로 이동 => `index = index / 2`
+            - 왼쪽 자식 노드로 이동 => `index = index * 2`
+            - 오른쪽 자식 노드로 이동 => `index = index * 2 + 1`
 
 </details><hr>
 
@@ -858,4 +875,122 @@
                 distance[adj_node] = dist + adj_dist
                 queue.put((distance[adj_node], adj_node))   # (거리, 노드) 순으로 저장
     ```
+</details><hr>
+
+
+<details>
+<summary><b> 최소 신장 트리 (minimum spanning tree)</b></summary>
+
+: 그래프에서 모든 노드를 연결할 때 사용된 에지들의 가중치 합을 최소로 하는 트리
+
+- 특징
+    - 사이클이 생기지 않도록 연결함
+    - 노드가 n개이면 최소 신장 트리를 구성하는 에지는 항상 (n-1)개
+    - 유니온 파인드를 활용해 구현
+
+
+- 구현 방법
+    1. 그래프를 엣지 리스트로 구현한다. 유니온 파인드 리스트도 초기화한다.
+        - 엣지 리스트의 각 인덱스마다 (노드1, 노드2, 가중치)가 저장됨
+    2. 엣지 리스트를 가중치 기준으로 정렬한다.
+    3. 가중치가 낮은 엣지부터 순서대로 선택해, 사이클이 형성되지 않는지 확인 후 두 노드를 연결한다.
+        - 사이클 형성 확인: find 연산
+        - 두 노드를 연결: union 연산
+    4. 연결된 엣지가 (n-1)개가 될 때까지 3번 작업을 반복한다.
+    
+    ```python
+    from queue import PriorityQueue
+    import sys
+    input = sys.stdin.readline
+    
+    V, E = map(int, input().split())
+    queue = PriorityQueue()
+    for _ in range(E):
+        node1, node2, weight = map(int, input().split())
+        queue.put((weight, node1, node2))  # weight 기준으로 정렬
+    parents = list(range(V + 1))
+    
+    
+    def find(node):
+        if node == parents[node]:
+            return node
+        else:
+            parent_node = find(parents[node])
+            parents[node] = parent_node
+            return parent_node
+    
+    def union(node1, node2):
+        node1_parent = find(node1)
+        node2_parent = find(node2)
+        if node1_parent <= node2_parent:
+            parents[node2_parent] = node1_parent
+        else:
+            parents[node1_parent] = node2_parent
+    
+    
+    weight_sum, edge_cnt = 0, 0
+    while queue.qsize() > 0 and edge_cnt < V-1:
+        weight, node1, node2 = queue.get()
+    
+        # 사이클 형성 여부 확인
+        node1_parent, node2_parent = find(node1), find(node2)
+        if node1_parent == node2_parent:  # 연결 X
+            continue
+    
+        # 두 노드 연결
+        union(node1, node2)
+        weight_sum += weight
+        edge_cnt += 1
+    
+    print(weight_sum)
+    ```
+
+    
+
+</details><hr>
+
+
+<details>
+<summary><b> 순열</b></summary>
+
+- 라이브러리 활용 코드
+    ```python
+    from itertools import permutations
+    
+    li1 = [1,2,3,4]
+    
+    permutations(li1)       # 4!
+    permutations(li1, r=2)  # 4P2
+    ```
+    - 결과로 객체를 반환하므로 list()를 씌워주자. 내부 값들은 튜플 형태이다.
+
+
+- n개의 수로 순열을 만드는 상황에서, 다음을 이용하자. 
+    - 1번째 자릿수가 정해졌다고 가정했을 때, 그 다음에 올 수 있는 경우의 수는 (n-1)!이다.
+    - 2번째 자릿수가 정해졌다고 가정했을 때, 그 다음에 올 수 있는 경우의 수는 (n-2)!이다.
+    - ...
+    - [참고 블로그](https://kosaf04pyh.tistory.com/211)
+
+</details><hr>
+
+
+<details>
+<summary><b> 동적 계획법 (Dynamic Programming)</b></summary>
+
+: 복잡한 문제를 여러 개의 간단한 문제로 분리하고, 부분 문제들을 해결함으로써 최종적인 문제의 답을 구하는 방법
+
+- 큰 문제를 작은 문제로 나눌 수 있어야함
+- 작은 문제들이 반복적으로 나타나고 사용되며, 이 결과값은 항상 같아야함
+- 모든 작은 문제의 결과값은 한번만 계산하여 DP 테이블에 저장 (Memoization)
+- Top-down 방식 또는 Bottom-up 방식으로 구현할 수 있음
+    - Top-down 방식: 주로 재귀함수 사용
+    - Bottom-up 방식: 주로 반복문 사용
+- 동적 계획법으로 풀 수 있다고 판단했으면 점화식 세우기
+
+
+- 대표적인 문제
+    - 피보나치 수열
+    - LCS (Longest Common Subsequence)
+        - [백준 9252번 문제](https://www.acmicpc.net/problem/9252)
+
 </details>
