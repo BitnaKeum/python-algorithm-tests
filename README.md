@@ -94,8 +94,8 @@
         import sys
         sys.setrecursionlimit(10000)
         ```
-
-<br>
+    
+    <br>
 
 - <b>Slicing</b>
     - 리스트 슬라이싱 결과 값은 리스트형
@@ -146,7 +146,6 @@
   - 문자열 정렬
   
     `sorted(문자열)` : 문자열 값은 변하지 않고, 정렬된 값만 리스트로 반환<br>
-    _+ 정렬된 리스트를 문자열로 바꾸려면? `''.join(리스트)`<br>_
       
     <br>
     
@@ -164,13 +163,22 @@
 
 - <b> 문자열이 알파벳/숫자인지 확인 </b>
 
-  - 숫자로만 이루어져 있는지 확인: `문자열.isdecimal()` 
+  - 숫자로만 이루어져 있는지 확인: `문자열.isdecimal()`
     
-    <br>
   - 알파벳으로만 이루어져 있는지 확인: `문자열.isalpha()`
     
-    <br>
   - 숫자+알파벳으로 이루어져 있는지 확인: `문자열.isalnum()`
+    
+<br>
+
+- <b>XOR 연산</b>
+  
+  : 값이 0이면 1로, 1이면 0으로 만들기
+  
+    ```python
+    value = 0
+    print(value ^ 1)   # 1
+    ```
 
 
 </details><hr>
@@ -195,18 +203,20 @@
       - 빈도 높은 순 (상위 2개)  : `collections.Counter(lis).most_common(2)  # [('b', 3), ('a', 1)]`<br>
   
   2. 두 리스트 빼기 (차집합)
-      - 코드1) 중복 원소 고려 X
+      - 코드1) 중복 원소 제거
         ```python
         lis1 = ['a', 'b', 'b', 'c']
-        lis2 = ['c', 'd']
+        lis2 = ['b', 'd']
         result = set(lis1) - set(lis2)  
-        result = list(result) # ['a']
+        result = list(result) # ['a', 'c']
         ```
-      - 코드2) 중복 원소 고려 O
+      - 코드2) 중복 원소 유지
         ```python
+        from collections import Counter
+        
         lis1 = ['a', 'b', 'b', 'c']
-        lis2 = ['c', 'd']
-        result = Counter(lis1) - Counter(lis2)    # Counter({'a': 1, 'b': 2})
+        lis2 = ['b', 'd']
+        result = Counter(lis1) - Counter(lis2)    # Counter({'a': 1, 'b': 1, 'c': 1})
         ```
 
 - `OrderedDict`
@@ -217,11 +227,13 @@
   
 
 - `deque`
-  - 리스트에서 pop()을 많이 사용하는 경우, 리스트 대신 deque를 이용하면 속도를 훨씬 높일 수 있다.
+  - pop()을 자주 사용해야 할 때, 리스트 대신 deque를 이용하면 속도를 훨씬 높일 수 있다.
   - _리스트의 pop(0)은 O(n), deque의 popleft()는 O(1)_
 
     ```python
-    queue = collections.deque([1,3,5])
+    from collections import deque
+    
+    queue = deque([1,3,5])
     
     queue.pop() # 맨 뒤 원소 pop
     queue.popleft() # 맨 앞 원소 pop, 리스트의 pop(0)과 동일한 역할
@@ -247,7 +259,7 @@
 <details>
 <summary><b> 소수 찾기 </b></summary>
 
-- 2부터 제곱근까지 나누어떨어지는지 확인하기
+- 2부터 **제곱근**까지 나누어떨어지는지 확인하기
 
     ```python
     # 기본 코드
@@ -297,24 +309,41 @@
 <details>
 <summary><b> 약수 구하기 </b></summary>
 
-  방법1. 해당 값(n)까지의 모든 값을 확인하기 _=> 비효율적_
 
-  방법2. &radic;n까지의 모든 값 i를 확인하는데, 이 때 대응되는 n//i 값도 넣어준다 (제곱수인지 확인하고 넣기)
+  방법1: 해당 값(n)까지의 모든 값을 확인하기 _=> 비효율적_
+
+  방법2: &radic;n까지의 모든 값 i를 확인하는데, 이 때 대응되는 n//i 값도 넣어준다 (제곱수인지 확인하고 넣기)
   ```python
   div_list = []
   for i in range(1, int(n**0.5)+1):
-          if n % i == 0:    # i는 n의 약수
-              div_list.append(i)
-              if n // i != i:   # n//i는 n의 약수
-                  div_list.append(n//i)
+      if n % i == 0:    # i는 n의 약수
+          div_list.append(i)
+          if n // i != i:   # n//i는 n의 약수
+              div_list.append(n//i)
   div_list = sorted(div_list)   # 오름차순 정렬
   ```
   <br>
 
-  - <b>약수의 개수가 홀수 or 짝수 ?</b>
+  - +) 약수의 개수가 홀수인지 짝수인지 구하기
     - 해당 값이 제곱수이면 약수의 개수는 홀수, 제곱수가 아니면 약수의 개수는 짝수
       - 제곱수 판별 : `if int(n**0.5) == n**0.5:`
   
+</details><hr>
+
+
+<details>
+<summary><b> 이차원 배열 회전시키기</b></summary>
+
+```python
+def rotate(arr):    # arr는 이차원 배열
+    row, col = len(arr), len(arr[0])
+    rotated_arr = [[0] * row for _ in range(col)]
+    for i in range(row):
+        for j in range(col):
+            rotated_arr[j][row-1-i] = arr[i][j] # 핵심!
+    return rotated_arr
+```
+
 </details><hr>
 
 
@@ -324,7 +353,7 @@
   - <b>DFS</b>
     
     : 현재 노드의 인접 노드 중 방문하지 않은 것을 모두 방문, 이 과정을 반복
-    - **재귀함수** or Stack을 이용해 구현\
+    - **재귀함수** or Stack을 이용해 구현
     - 시간복잡도: O(V+E)
         - V는 노드 수, E는 간선 수
     
@@ -379,7 +408,9 @@
   
 
 - <b>우선순위 큐 (Priority Queue)</b>
-  - 단순히 먼저 들어온 값을 반환하지 않고, 저장된 값들을 **정렬**해서 가장 작은 값을 반환함
+  
+  : 단순히 먼저 들어온 값을 반환하지 않고, 저장된 값들을 **정렬**해서 가장 작은 값을 반환함
+
   - 일반적으로 `PriorityQueue`를 사용해 구현
     - 삽입: `put()`
     - 제거: `get()`
@@ -413,6 +444,7 @@
       print(queue.get())  # (2, 'apple')
       ```
   
+  - `heapq`로도 구현 가능
       ```python
       import heapq
       
@@ -484,15 +516,16 @@
   - 이진 탐색을 사용하려면 리스트가 **정렬**되어 있어야함!
   - 값의 갯수 or 범위가 엄청 클 때 많이 사용
   - 시간복잡도: O(logn)
-  - **코딩테스트 자주 출제**
-
+  - **코딩테스트 자주 출제** 
+    
+  <br>
 
   - 코드1. 재귀로 구현
     ```python
     arr = [0,2,4,6,8]
     target = 4
     
-    def binary_search(arr, target, start, end):
+    def binary_search(start, end):
         if start > end: # 해당 값이 없는 경우
             return -1
         
@@ -506,14 +539,14 @@
             # start = mid +1
             return binary_search(arr, target, mid+1, end)
         
-    binary_search(arr, target, 0, len(arr)-1)  # 2
+    binary_search(0, len(arr)-1)  # 2
     ```
   - 코드2. 반복문으로 구현
     ```python
     arr = [0,2,4,6,8]
     target = 4
     
-    def binary_search(arr, target, start, end):
+    def binary_search(start, end):
         while start <= end:
             mid = (start + end) // 2
             
@@ -525,7 +558,7 @@
                 start = mid + 1
         return -1 # 해당 값이 없는 경우
         
-    binary_search(arr, target, 0, len(arr)-1)  # 2
+    binary_search(0, len(arr)-1)  # 2
     ```
 
 </details><hr>
@@ -554,8 +587,8 @@
             sum += end
             answer += 1
         else:
-            sum -= start
             start += 1
+            sum -= start
     print(answer)
     ```
   - 예제2. k를 두 수의 합으로 나타낼 수 있는 경우의 수
@@ -582,7 +615,46 @@
 <details>
 <summary><b> 정렬 알고리즘</b></summary>
 
-1. <b>버블(bubble) 정렬</b>
+1. <b>병합(merge) 정렬</b>
+
+    : 리스트를 두 개의 부분집합으로 반복해 나누고, 이미 정렬된 부분집합들을 병합하며 정렬하는 방식
+
+    - 재귀함수를 통해 리스트를 쪼갠 후, 투 포인터를 이용해 두 부분집합에서 작은 값부터 집어넣음
+    - 시간복잡도: O(nlogn)
+    - **코딩테스트에서 자주 등장**
+    
+    ```python
+    arr = [3,5,4,1,2]
+    
+    def merge_sort(arr):
+        if len(arr) <= 1:
+            return arr
+    
+        # 리스트 쪼개기
+        mid = len(arr) // 2
+        left_arr = merge_sort(arr[:mid])
+        right_arr = merge_sort(arr[mid:])
+        
+        # 투 포인터를 활용해 작은 값부터 집어넣음
+        merged_arr = []
+        l, r = 0, 0
+        while l < len(left_arr) and r < len(right_arr):
+            if left_arr[l] < right_arr[r]:
+                merged_arr.append(left_arr[l])
+                l += 1
+            else:
+                merged_arr.append(right_arr[r])
+                r += 1
+        # 남은 원소들 삽입
+        if l < len(left_arr):
+            merged_arr += left_arr[l:]
+        else:
+            merged_arr += right_arr[r:]
+            
+        return merged_arr
+    ```
+
+2. <b>버블(bubble) 정렬</b>
 
     : 인접 값끼리 비교해서 swap하며 정렬하는 방식
    
@@ -595,15 +667,6 @@
             if arr[j] > arr[j+1]:   # swap
                 arr[j], arr[j+1] = arr[j+1], arr[j]
     ```
-
-
-2. <b>선택(selection) 정렬</b>
-
-    : 남은 부분에서 최소값을 찾고 남은 부분의 맨 앞에 있는 데이터와 swap하며 정렬하는 방식 (최대값도 가능)
-
-    - 시간복잡도: O(n^2)
-    - 구현이 복잡하고 시간복잡도도 높아 코테에서 잘 사용하지 않음!
-
 
 3. <b>삽입(insertion) 정렬</b>
 
@@ -621,7 +684,6 @@
             else:
                 break
     ```
-    
 
 4. <b>퀵(quick) 정렬</b>
 
@@ -646,41 +708,12 @@
     print(quick_sort(arr))  # [1,2,3,4,5]
     ```
 
+5. <b>선택(selection) 정렬</b>
 
-5. <b>병합(merge) 정렬</b>
+    : 남은 부분에서 최소값을 찾고 남은 부분의 맨 앞에 있는 데이터와 swap하며 정렬하는 방식 (최대값도 가능)
 
-    : 부분집합을 두개씩 나누고, 이미 정렬된 부분집합들을 병합하며 정렬하는 방식
-
-    - 시간복잡도: O(nlogn)
-    - **코딩테스트에서 자주 등장**
-    
-    ```python
-    arr = [3,5,4,1,2]
-    
-    def merge_sort(arr):
-        if len(arr) <= 1:
-            return arr
-    
-        mid = len(arr) // 2
-        left_arr = merge_sort(arr[:mid])
-        right_arr = merge_sort(arr[mid:])
-    
-        merged_arr = []
-        l, r = 0, 0
-        while l < len(left_arr) and r < len(right_arr):
-            if left_arr[l] < right_arr[r]:
-                merged_arr.append(left_arr[l])
-                l += 1
-            else:
-                merged_arr.append(right_arr[r])
-                r += 1
-        if l < len(left_arr):
-            merged_arr += left_arr[l:]
-        else:
-            merged_arr += right_arr[r:]
-            
-        return merged_arr
-    ```
+    - 시간복잡도: O(n^2)
+    - 구현이 복잡하고 시간복잡도도 높아 코테에서 잘 사용하지 않음!
 
 </details><hr>
 
@@ -749,7 +782,7 @@
 <details>
 <summary><b> 위상 정렬</b></summary>
 
-: 사이클이 없는 방향 그래프에서 노드 순서를 찾는 알고리즘
+: 사이클이 없는 방향 그래프에서 **노드의 순서**를 찾는 알고리즘
 
 - 정렬 결과가 유일하지는 않음
 - 시간복잡도: O(V+E)
@@ -844,6 +877,7 @@
             continue
         for adj_node, adj_dist in graph[node]:
             if dist + adj_dist < distance[adj_node]:  # 최단 거리 업데이트
+            # if distance[node] + adj_dist < distance[adj_node]:  # 이렇게 작성하지 않도록 주의!
                 distance[adj_node] = dist + adj_dist
                 heapq.heappush(queue, (distance[adj_node], adj_node))   # (거리, 노드) 순으로 저장
     ```
@@ -881,7 +915,7 @@
 <details>
 <summary><b> 최소 신장 트리 (minimum spanning tree)</b></summary>
 
-: 그래프에서 모든 노드를 연결할 때 사용된 에지들의 가중치 합을 최소로 하는 트리
+: 그래프에서 **모든 노드를 연결**할 때 사용된 **에지들의 가중치 합을 최소**로 하는 트리
 
 - 특징
     - 사이클이 생기지 않도록 연결함
@@ -893,6 +927,7 @@
     1. 그래프를 엣지 리스트로 구현한다. 유니온 파인드 리스트도 초기화한다.
         - 엣지 리스트의 각 인덱스마다 (노드1, 노드2, 가중치)가 저장됨
     2. 엣지 리스트를 가중치 기준으로 정렬한다.
+        - 이를 위해 엣지 리스트를 우선순위 큐로 구현
     3. 가중치가 낮은 엣지부터 순서대로 선택해, 사이클이 형성되지 않는지 확인 후 두 노드를 연결한다.
         - 사이클 형성 확인: find 연산
         - 두 노드를 연결: union 연산
