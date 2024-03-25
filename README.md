@@ -489,6 +489,10 @@ def rotate(arr):    # arr는 이차원 배열
     heapq.heapify(heap)
     heapq.heappop(heap)  # 1
     ```
+    
+    - heap을 비우려면
+      - `heap = []`로 리스트를 재생성해주면 됨 
+
 
 </details><hr>
 
@@ -834,11 +838,11 @@ def rotate(arr):    # arr는 이차원 배열
 <details>
 <summary><b> 다익스트라 (Dijkstra) 알고리즘</b></summary>
 
-: 특정 노드와 다른 모든 노드들 간의 **최단 거리**를 구할 때 사용
+: 특정 노드에서 다른 모든 노드들까지의 **최단 거리**를 구할 때 사용
 
-- 조건
-  - 노드 간 거리(가중치)가 주어지는 방향 그래프여야 함 
-  - 거리(가중치)는 모두 양수여야 함
+- 특징
+  - 노드 간 거리가 주어지는 방향 그래프여야 함 
+  - 거리는 모두 **양수**여야 함
 - 시간복잡도: O(ElogV)
 
 
@@ -849,7 +853,7 @@ def rotate(arr):    # arr는 이차원 배열
        - 이를 위해 **우선순위 큐**를 사용해야 함 (`PriorityQueue` / `heapq`)
        - 큐에 (거리, 노드) 순으로 저장해야 함
     4. 선택한 노드에 연결된 노드들에 대해 거리를 업데이트한다.
-        - `distance[adj_node]`과 `distance[node] + adj_dist` 중 더 작은 것
+        - `distance[adj_node]`과 `dist + adj_dist` 중 더 작은 것
     5. 모든 노드가 선택될 때까지 3~4번을 반복한다.
     
 
@@ -913,18 +917,74 @@ def rotate(arr):    # arr는 이차원 배열
 
 
 <details>
+<summary><b> 벨만-포드 (Bellman-ford) 알고리즘</b></summary>
+
+: 특정 노드에서 다른 모든 노드들까지의 **최단 거리**를 구할 때 사용 (음수 거리가 있을 때!) 
+
+- 특징
+  - 노드 간 거리가 주어지는 방향 그래프여야 함 
+  - 거리가 **음수**여도 됨
+  - 노드가 n개일 때 엣지의 최대 갯수는 (n-1)이므로 거리 업데이트를 (n-1)번 반복
+- 시간복잡도: O(VE)
+- 코딩테스트에서는 최단 거리 구하는 문제보다 음수 사이클을 판별하는 문제가 더 많이 출제됨
+
+
+- 구현 방법
+    1. 그래프를 **엣지 리스트**로 구현한다.
+       - 엣지 리스트의 각 인덱스마다 (노드1, 노드2, 가중치)가 저장됨
+    2. `distance` 리스트를 만들고, 출발 노드의 거리는 0, 다른 노드들의 거리는 INF로 초기화한다.
+    3. 거리 업데이트를 (n-1)번 반복한다.
+        - `distance[src_node] == INF`일 때, 값을 업데이트하지 X
+        - `distance[src_node] + weight < distance[tgt_node]`일 때, `distance[tgt_node]`를 업데이트 
+    4. **음수 사이클**이 존재하는지 확인한다.
+        - 모든 엣지를 한번씩 다시 사용해 업데이트된 노드가 있는지 확인
+        - 업데이트가 일어났으면 음수 사이클이 존재하는 것 => 최단 거리 찾을 수 없음
+
+    ```python
+    # 그래프를 엣지 리스트로 구현
+    graph = []
+    for _ in range(m):
+        src_node, tgt_node, dist = map(int, input().split())
+        graph.append((src_node, tgt_node, dist))
+        
+    # distance 리스트 만들기
+    INF = 10 ** 6
+    distance = [INF] * (n+1)
+    
+    # start 노드
+    start = 1
+    distance[start] = 0
+    
+    # 벨만-포드 알고리즘
+    for _ in range(n-1):    # (n-1)번 반복
+        for (src_node, tgt_node, dist) in graph:
+            if distance[src_node] != INF and distance[src_node] + dist < distance[tgt_node]:
+                distance[tgt_node] = distance[src_node] + dist
+    # 음수 사이클 판별
+    neg_cycle = False
+    for (src_node, tgt_node, dist) in graph:    # 1번 반복
+        if distance[src_node] != INF and distance[src_node] + dist < distance[tgt_node]:
+            # 업데이트가 일어나는 경우 (음수 사이클 존재)
+            neg_cycle = True
+            break
+    ```
+
+</details><hr>
+
+
+<details>
 <summary><b> 최소 신장 트리 (minimum spanning tree)</b></summary>
 
 : 그래프에서 **모든 노드를 연결**할 때 사용된 **에지들의 가중치 합을 최소**로 하는 트리
 
 - 특징
     - 사이클이 생기지 않도록 연결함
-    - 노드가 n개이면 최소 신장 트리를 구성하는 에지는 항상 (n-1)개
-    - 유니온 파인드를 활용해 구현
+    - 노드가 n개이면 최소 신장 트리를 구성하는 <b>에지는 항상 (n-1)개</b>
+    - <b>유니온 파인드</b>를 활용해 구현
 
 
 - 구현 방법
-    1. 그래프를 엣지 리스트로 구현한다. 유니온 파인드 리스트도 초기화한다.
+    1. 그래프를 **엣지 리스트**로 구현한다. 유니온 파인드 리스트도 초기화한다.
         - 엣지 리스트의 각 인덱스마다 (노드1, 노드2, 가중치)가 저장됨
     2. 엣지 리스트를 가중치 기준으로 정렬한다.
         - 이를 위해 엣지 리스트를 우선순위 큐로 구현
