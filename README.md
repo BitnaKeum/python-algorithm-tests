@@ -973,6 +973,53 @@ def rotate(arr):    # arr는 이차원 배열
 
 
 <details>
+<summary><b> 플로이드-워셜 (Floyd-warshall) 알고리즘</b></summary>
+
+: 모든 노드 간에 **최단 거리**를 구할 때 사용
+
+- 특징
+    - 노드 간 거리가 주어지는 방향 그래프여야 함
+    - 거리가 **음수**여도 됨
+    - Dynamic Programming의 원리를 이용
+        - A → B 로 가는 최단 경로를 구했을 때, 그 경로 위에 존재하는 C 노드에 대해 A → C, C → B 경로 역시 최단 경로임
+- 시간복잡도: O(V^3)
+    - 시간복잡도가 높기 때문에 노드 수는 적게 주어짐
+
+
+- 구현 방법
+    1. `distance` 리스트를 이차원으로 만들고, 자기 자신을 뜻하는 대각선 칸의 거리는 0, 다른 칸의 거리는 INF로 초기화한다.
+    2. 그래프의 데이터를 `distance` 리스트에 저장한다.
+    3. 3중 for문으로 **점화식**에 따라 거리를 업데이트한다. 
+       - for문 순서: 경유 노드 K에 대해 → 출발 노드 S에 대해 → 도착 노드 E에 대해
+       - 점화식: `distance[S][E] = min(distance[S][E], distance[S][K] + distance[K][E])`
+        
+    ```python
+    # distance 리스트 만들기
+    INF = 10 ** 6
+    distance = [[INF] * (n+1) for _ in range(n+1)]
+    for i in range(1, n+1):
+        distance[i][i] = 0
+    
+    # 그래프의 데이터를 distance 리스트에 저장하기
+    for _ in range(m):
+        s, e, dist = map(int, input().split())
+        if distance[s][e] > dist:
+            distance[s][e] = dist
+    
+    # 플로이드-워셜 알고리즘
+    # 3중 for문으로 거리 업데이트
+    for k in range(1, n+1):
+        for i in range(1, n+1):
+            for j in range(1, n+1):
+                if distance[i][j] > distance[i][k] + distance[k][j]:    # 점화식
+                    distance[i][j] = distance[i][k] + distance[k][j]
+    ```
+
+
+</details><hr>
+
+
+<details>
 <summary><b> 최소 신장 트리 (minimum spanning tree)</b></summary>
 
 : 그래프에서 **모든 노드를 연결**할 때 사용된 **에지들의 가중치 합을 최소**로 하는 트리
