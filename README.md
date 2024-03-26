@@ -1086,8 +1086,34 @@ def rotate(arr):    # arr는 이차원 배열
     
     print(weight_sum)
     ```
+</details><hr>
 
-    
+
+<details>
+<summary><b> 세그먼트 트리 (Segment Tree)</b></summary>
+
+: 데이터의 특정 **구간 합**과 **업데이트**를 빠르게 수행하기 위해 사용
+
+- 세그먼트 트리의 종류: 구간 합, 최대값, 최소값
+
+
+- 구현 방법
+  1. 트리 초기화하기
+     - 데이터가 $N$개일 때, $2^k >= N$ 을 만족하는 최소의 $k$를 구한 후, $2^k * 2$ 크기의 트리 리스트를 만듦
+     - 트리 리스트의 $2^k$부터 마지막 index까지 (= Leaf 노드) 주어진 데이터를 채워넣음
+     - 트리 리스트의 $2^k-1$부터 1 index까지 세그먼트 트리의 종류에 따라 값을 채움
+       - 구간 합: tree[i] = tree[2i] + tree[2i+1]
+       - 최대값: tree[i] = max(tree[2i], tree[2i+1])
+       - 최소값: tree[i] = min(tree[2i], tree[2i+1])
+  2. 질의 값 구하기
+     - 주어진 질의 index를 세그먼트 트리의 Leaf 노드에 해당하는 index로 변경
+       - 세그먼트 트리 index = 질의 index + $2^k - 1$
+     - 다음의 과정을 거침
+       1. `start_index % 2 == 1`일 때 해당 노드를 선택
+       2. `end_index % 2 == 0`일 때 해당 노드를 선택
+       3. start_index의 depth 변경: `start_index = (start_index + 1) / 2`
+       4. end_index의 depth 변경: `end_index = (end_index - 1) / 2`
+       5. 1~4 작업을 반복하다가 `start_index > end_index`가 되면 종료
 
 </details><hr>
 
