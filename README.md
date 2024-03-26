@@ -1097,23 +1097,79 @@ def rotate(arr):    # arr는 이차원 배열
 - 세그먼트 트리의 종류: 구간 합, 최대값, 최소값
 
 
-- 구현 방법
-  1. 트리 초기화하기
-     - 데이터가 $N$개일 때, $2^k >= N$ 을 만족하는 최소의 $k$를 구한 후, $2^k * 2$ 크기의 트리 리스트를 만듦
-     - 트리 리스트의 $2^k$부터 마지막 index까지 (= Leaf 노드) 주어진 데이터를 채워넣음
-     - 트리 리스트의 $2^k-1$부터 1 index까지 세그먼트 트리의 종류에 따라 값을 채움
-       - 구간 합: tree[i] = tree[2i] + tree[2i+1]
-       - 최대값: tree[i] = max(tree[2i], tree[2i+1])
-       - 최소값: tree[i] = min(tree[2i], tree[2i+1])
-  2. 질의 값 구하기
-     - 주어진 질의 index를 세그먼트 트리의 Leaf 노드에 해당하는 index로 변경
-       - 세그먼트 트리 index = 질의 index + $2^k - 1$
-     - 다음의 과정을 거침
-       1. `start_index % 2 == 1`일 때 해당 노드를 선택
-       2. `end_index % 2 == 0`일 때 해당 노드를 선택
-       3. start_index의 depth 변경: `start_index = (start_index + 1) / 2`
-       4. end_index의 depth 변경: `end_index = (end_index - 1) / 2`
-       5. 1~4 작업을 반복하다가 `start_index > end_index`가 되면 종료
+
+- 세그먼트 트리 만들기
+    - 데이터가 $N$개일 때, $2^k >= N$ 을 만족하는 최소의 $k$를 구한 후, $2^(k+1)$ 크기의 트리 리스트를 만듦
+    - 트리 리스트의 $2^k$ index부터 주어진 데이터를 채워넣음 (Leaf 노드)
+    - 채워진 값을 이용해 부모 노드로 올라가면서 세그먼트 트리의 종류에 따라 값을 채움
+        - 구간 합: tree[i] = tree[2i] + tree[2i+1]
+        - 최대값: tree[i] = max(tree[2i], tree[2i+1])
+        - 최소값: tree[i] = min(tree[2i], tree[2i+1])
+    
+
+- 구간 합/최대값/최소값 구하기
+    - 주어진 질의 index를 세그먼트 트리의 Leaf 노드에 해당하는 index로 변경
+        - 세그먼트 트리 index = 질의 index + $2^k - 1$
+    - 다음의 과정을 거침
+        1. `start_index % 2 == 1`이면 해당 노드를 선택해 연산 수행
+            - `start_index += 1`
+        2. `end_index % 2 == 0`이면 해당 노드를 선택해 연산 수행
+            - `end_index -= 1`
+        3. start_index의 depth 변경: `start_index = start_index // 2`
+        4. end_index의 depth 변경: `end_index = end_index // 2`
+        - a~d 작업을 반복하다가 `start_index > end_index`가 되면 종료
+    
+
+- 값 업데이트하기
+    - 업데이트된 노드의 값과 부모가 같은 다른 자식 노드의 값에 대해 연산하고 계속해서 부모 노드로 올라감
+    - 업데이트가 일어나지 않으면 종료
+    - ex) 최대값 트리에서, 6번 노드의 값이 업데이트됨 → 6번과 7번 노드의 값 중 더 큰 값을 부모인 3번 노드에 업데이트 → 3번 노드와 2번 노드 값 비교해서 더 큰 값을 부모인 1번 노드에 업데이트
+
+```python
+# 2^k>=N 만족하는 k 구하기
+length = N
+k = 0
+while length != 0:
+    length = length // 2
+    k += 1
+# N: 5, k = 0
+# N: 2, k = 1
+# N: 1, k = 2
+# N: 0, k = 3
+
+# 2^(k+1) 크기의 리스트 만들기
+INF = 10 ** 6
+tree_size = 2 ** (k+1)
+tree = [INF] * (tree_size + 1)  # [0]은 사용 X
+
+# 2^k index부터 주어진 데이터 저장
+for i in range(2**k, 2**k + N):
+    tree[i] = int(input())  # 데이터 입력
+
+# 부모 노드로 올라가면서 값 채우기
+i = tree_size
+while i != 1:   # 1이면 Root 노드이므로 종료
+    if tree[i//2] > tree[i]:
+        tree[i//2] = tree[i]
+    i -= 1
+    
+# a번째부터 b번째 값 중에서 최소값 구하기
+start, end = a + (2**k - 1), b + (2**k - 1) # 질의 index를 세그먼트 트리의 index로 변경
+selected_nums = []
+while start <= end:
+    if start % 2 == 1:
+        selected_nums.append(tree[start])
+        start += 1
+    if end % 2 == 0:
+        selected_nums.append(tree[end])
+        end -= 1
+    start = start // 2
+    end = end // 2
+
+answer = sum(selected_nums)
+answer = max(selected_nums)
+answer = min(selected_nums)
+```
 
 </details><hr>
 
