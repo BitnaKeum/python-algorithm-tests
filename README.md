@@ -1220,5 +1220,7 @@ def rotate(arr):    # arr는 이차원 배열
     - 피보나치 수열
     - LCS (Longest Common Subsequence)
         - [백준 9252번 문제](https://www.acmicpc.net/problem/9252)
+    - 타일 채우기
+        - [백준 11726번 문제](https://www.acmicpc.net/problem/11726)
 
 </details>
