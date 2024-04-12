@@ -174,10 +174,29 @@
 - <b>XOR 연산</b>
   
   : 값이 0이면 1로, 1이면 0으로 만들기
+
+  - `^` 연산은 int형 변수에만 가능, '0111'과 같은 문자열에는 불가
   
     ```python
-    value = 0
-    print(value ^ 1)   # 1
+    num = 0
+    print(num ^ 1)   # 1
+    ```
+    ```python
+    num1 = 7    # 0111 (2진법)
+    num2 = 8    # 1000 (2진법)
+    print(num1 ^ num2)  # 15 (10진법) == 1111 (2진법)
+    ```
+    
+<br>
+
+- <b>Shift 연산</b>
+
+  : bit를 한칸씩 밀기
+
+    ```python
+    num = 8 # 1000 (2진법)
+    print(num >> 1) # 4 (10진법) == 0100 (2진법)
+    print(num >> 2) # 2 (10진법) == 0010 (2진법)
     ```
 
 
@@ -247,11 +266,23 @@
 
 
 <details>
-<summary><b> n진법 수를 10진법으로 변환하기 </b></summary>
+<summary><b> 진법 변환하기 </b></summary>
 
-  `int(수 문자열, n)`
+- n진법 → 10진법 변환: `int(수 문자열, n)`
+  
+    ```python
+    print(int('1000', 2))   # 8
+    ```
+    
+<br>
+    
+- 10진법 → 2진법 변환: `bin()`
 
-  ex) `int('1010', 2)   # 10`
+  ```python
+  num = 8
+  print(bin(num))      # '0b1000'
+  print(bin(num)[2:])  # '1000
+  ```
 
 </details><hr>
 
