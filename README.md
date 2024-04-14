@@ -436,7 +436,19 @@ def rotate(arr):    # arr는 이차원 배열
     queue.append(1)
     queue.popleft() # 3
     ```
-  
+  - 주의) `append()`에 리스트를 전달하면 리스트 전체를 하나의 원소로 추가하므로, 이 경우 `extend()`를 사용
+    ```python
+    queue = deque()
+    queue.append(0)
+    queue.append([1,2,3])
+    # queue: deque([0,[1,2,3]])
+    
+    queue = deque()
+    queue.append(0)
+    queue.extend([1,2,3])
+    # queue: deque([0,1,2,3])
+    ```
+   
 
 - <b>우선순위 큐 (Priority Queue)</b>
   
