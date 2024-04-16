@@ -214,13 +214,25 @@
     dic['A'] += 1 # 원래대로라면 존재하지 않는 key 값이므로 에러가 발생하지만, {'A': 1}이 됨
     ```
 
+<br>
+
 - `Counter`
   1. 원소의 빈도 세기<br>
-     `lis = ['a', 'b', 'b', 'c', 'b']`일 때,<br>
-      - 기본 : `collections.Counter(lis)   # Counter({'b': 3, 'a': 1, 'c': 1})`<br>
-      - 빈도 높은 순 (모두) : `collections.Counter(lis).most_common()   # [('b', 3), ('a', 1), ('c', 1)]`<br>
-      - 빈도 높은 순 (상위 2개)  : `collections.Counter(lis).most_common(2)  # [('b', 3), ('a', 1)]`<br>
-  
+     ```python
+     from collections import Counter
+     
+     lis = ['a', 'b', 'b', 'c', 'b']
+     
+     # 기본 사용법
+     Counter(lis)   # Counter({'b': 3, 'a': 1, 'c': 1})
+     
+     # List(Tuple) 형태로 전체 반환하기
+     Counter(lis).most_common()   # [('b', 3), ('a', 1), ('c', 1)]
+     
+     # List(Tuple) 형태로 빈도 수 상위 k개 반환하기
+     Counter(lis).most_common(2)  # [('b', 3), ('a', 1)]
+     ```
+    
   2. 두 리스트 빼기 (차집합)
       - 코드1) 중복 원소 제거
         ```python
@@ -238,12 +250,15 @@
         result = Counter(lis1) - Counter(lis2)    # Counter({'a': 1, 'b': 1, 'c': 1})
         ```
 
+<br>
+
 - `OrderedDict`
   - 딕셔너리의 입력 순서를 유지
   - Python 3.7 이상부터는 자동으로 입력 순서가 유지되지만, 혹시 모를 상황을 위해 사용하자.
   
     `collections.OrderedDict({'c': 1, 'a': 5, 'b': 4}) # 딕셔너리 형태 유지`
   
+<br>
 
 - `deque`
   - pop()을 자주 사용해야 할 때, 리스트 대신 deque를 이용하면 속도를 훨씬 높일 수 있다.
