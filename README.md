@@ -5,16 +5,20 @@
 
   
 - O(1)
-  - 딕셔너리(해시 테이블)에서 `in` 연산
-  - 리스트/Queue에서 `pop()`
+  - List에서 `pop()`
+  - deque에서 `pop()`, `popleft()`, `append()`, `appendleft()`
+  - PriorityQueue에서 `get()`
+  - Dictionary(해시 테이블)에서 `in` 연산
 - O(logn)
+  - PriorityQueue에서 `put()`
+  - heapq에서 `heappush()`, `heappop()`
   - 이진 탐색(Binary Search)
 - O(n)
+  - List에서 `in` 연산
+  - List에서 `pop(n)`
   - 투 포인터
-  - 리스트에서 `in` 연산
-  - 리스트에서 `pop(n)`
 - O(nlogn)
-  - 내장함수 sort(), sorted()
+  - `sort()`, `sorted()`
   - 병합 정렬, 퀵 정렬
 - O(n^2)
   - 버블 정렬
@@ -261,19 +265,24 @@
 <br>
 
 - `deque`
-  - pop()을 자주 사용해야 할 때, 리스트 대신 deque를 이용하면 속도를 훨씬 높일 수 있다.
-  - _리스트의 pop(0)은 O(n), deque의 popleft()는 O(1)_
+  - pop 연산을 자주 사용해야 할 때, 리스트 대신 deque를 이용하면 속도를 훨씬 높일 수 있다.
+  - `append()`, `popleft()`, `pop()`, `appendleft()` 연산의 시간복잡도는 모두 O(1) 
+    - _참고: List의 `pop(0)`는 O(n)_
+  - `rotate(k)`: k가 양수이면 오른쪽으로 k칸 회전, k가 음수이면 왼쪽으로 k칸 회전
 
     ```python
     from collections import deque
     
-    queue = deque([1,3,5])
+    q = deque([1,3,5])
     
-    queue.pop() # 맨 뒤 원소 pop
-    queue.popleft() # 맨 앞 원소 pop, 리스트의 pop(0)과 동일한 역할
+    q.pop() # 맨 뒤 원소 pop
+    q.popleft() # 맨 앞 원소 pop, 리스트의 pop(0)과 동일한 역할
     
-    queue.append(10) # 맨 뒤에 원소를 삽입
-    queue.appendleft(10) # 맨 앞에 원소를 삽입
+    q.append(10) # 맨 뒤에 원소를 삽입
+    q.appendleft(10) # 맨 앞에 원소를 삽입
+    
+    q.rotate(1) # 오른쪽으로 한칸씩 이동 (ex: [1,3,5] -> [5,1,3])
+    q.rotate(-1) # 왼쪽으로 한칸씩 이동  (ex: [1,3,5] -> [3,5,1])
     ```
 
 </details>
