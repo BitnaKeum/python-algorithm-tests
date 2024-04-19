@@ -403,22 +403,20 @@ def rotate(arr):    # arr는 이차원 배열
 
 
 <details>
-<summary><b> BFS / DFS </b></summary>
+<summary><b> DFS / BFS </b></summary>
 
   - <b>DFS</b>
-    
-    : 현재 노드의 인접 노드 중 방문하지 않은 것을 모두 방문, 이 과정을 반복
+    - 깊게 탐색
     - **재귀함수** or Stack을 이용해 구현
     - 시간복잡도: O(V+E)
         - V는 노드 수, E는 간선 수
     
     ```python
-    # 재귀함수로 구현한 코드
+    # 재귀함수로 구현
     
-    def dfs(graph, node, visited):
+    def dfs(node):
         visited[node] = True
-        print(node, end=' ')
-    
+        print(node, end=' ')    # 출력
         for adj_node in graph[node]:
             if not visited[adj_node]:
                 dfs(graph, adj_node, visited)
@@ -433,14 +431,58 @@ def rotate(arr):    # arr는 이차원 배열
         [2,4],
     ]
     visited = [False] * (n+1)   # [0]은 사용하지 않음
-    dfs(graph, 1, visited)      # 시작 노드는 1
-    # 출력: 1 2 4 5 3
+    dfs(1)   # 시작 노드: 1
+    # 출력 결과: 1 2 4 5 3
     ```
 
 <br>
       
   - <b>BFS</b>
-    - Queue를 이용해 구현
+    - 넓게 탐색
+    - **Queue**를 이용해 구현
+    - 시간복잡도: O(V+E)
+        - V는 노드 수, E는 간선 수
+    - 최단 경로 찾을 때 자주 사용
+
+    ```python
+    from collections import deque
+    
+    def bfs(start):
+        q = deque()
+        q.append(start)
+        visited[start] = True
+    
+        while q:
+            node = q.popleft()
+            print(node, end=' ')    # 출력
+            for adj_node in graph[node]:
+                if not visited[adj_node]:
+                    q.append(adj_node)
+                    visited[adj_node] = True
+    
+    n = 5
+    graph = [
+        [],     # [0]은 사용하지 않음
+        [2,3],
+        [1,4,5],
+        [1],
+        [2,5],
+        [2,4],
+    ]
+    visited = [False] * (n+1)   # [0]은 사용하지 않음
+    bfs(1)   # 시작 노드: 1
+    # 출력 결과: 1 2 3 4 5
+    ```
+    
+    <br>
+
+    - __BFS와 다익스트라의 차이점__
+        - BFS와 다익스트라 모두 그래프에서 최단 경로를 찾기 위한 알고리즘이다. 
+        - BFS에서는 간선의 수를 최소로 하는 반면, 다익스트라에서는 가중치의 합을 최소로 한다.
+          - 즉, 돌아가는 경로여도 가중치 합이 최소이기만 하면 된다면 다익스트라를 사용
+        - BFS에서는 가중치가 없거나 동일한 반면, 다익스트라에서는 가중치가 다를 수 있다. 
+        - BFS에서는 Queue를 사용하는 반면, 다익스트라에서는 Priority Queue 또는 Heap을 사용한다.
+        - 현재 노드의 인접 노드들을 탐색할 때, BFS에서는 방문한 적이 없는지 확인하는 반면, 다익스트라에서는 최소 거리인지 확인한다.
  
 </details><hr>
 
@@ -980,6 +1022,16 @@ def rotate(arr):    # arr는 이차원 배열
                 distance[adj_node] = dist + adj_dist
                 queue.put((distance[adj_node], adj_node))   # (거리, 노드) 순으로 저장
     ```
+<br>
+
+  - __BFS와 다익스트라의 차이점__
+    - BFS와 다익스트라 모두 그래프에서 최단 경로를 찾기 위한 알고리즘이다. 
+    - BFS에서는 간선의 수를 최소로 하는 반면, 다익스트라에서는 가중치의 합을 최소로 한다.
+      - 즉, 돌아가는 경로여도 가중치 합이 최소이기만 하면 된다면 다익스트라를 사용
+    - BFS에서는 가중치가 없거나 동일한 반면, 다익스트라에서는 가중치가 다를 수 있다. 
+    - BFS에서는 Queue를 사용하는 반면, 다익스트라에서는 Priority Queue 또는 Heap을 사용한다.
+    - 현재 노드의 인접 노드들을 탐색할 때, BFS에서는 방문한 적이 없는지 확인하는 반면, 다익스트라에서는 최소 거리인지 확인한다.
+ 
 </details><hr>
 
 
