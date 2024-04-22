@@ -579,7 +579,8 @@ def rotate(arr):    # arr는 이차원 배열
   - 최소값/최대값을 반복적으로 찾아야할 때 유용함
   - Heap은 완전이진트리이므로 높이가 logn => 모든 노드에 대해 연산을 해야하므로 시간복잡도는 O(nlogn)
   - pop 연산을 하면 루트 노드의 값이 반환됨 (min heap이면 최소값, max heap이면 최대값)
-  - heapq 모듈은 min heap만을 지원함. max heap을 사용해야한다면 원소를 모두 음수로 만들어서 사용하면 됨.
+  - `heapq` 모듈은 min heap만을 지원함
+    - max heap을 사용해야한다면 원소를 모두 음수로 만들어서 사용하면 됨.
 
     ```python
     import heapq
@@ -599,9 +600,12 @@ def rotate(arr):    # arr는 이차원 배열
     heapq.heappop(heap)  # 1
     ```
     
-    - heap을 비우려면
-      - `heap = []`로 리스트를 재생성해주면 됨 
+  - heap을 비우려면
+    - `heap = []`로 리스트를 재생성해주면 됨
+      
 
+  ![min heap.png](images/min heap.png)
+  - _Binary Search Tree의 성질과 헷갈리지 말 것!_
 
 </details><hr>
 
@@ -609,16 +613,24 @@ def rotate(arr):    # arr는 이차원 배열
 <details>
 <summary><b> Tree</b></summary>
 
-- **이진 트리**
-    - 자식 노드의 수가 1개 또는 2개로 구성된 트리
+- **Binary Tree**
+    - 자식 노드의 수는 최대 2개
     - 일반적으로 리스트로 구현
-        - 루트 노드의 index는 1
-        - index로 노드를 이동할 때
+        - root 노드의 index는 1
+        - index로 노드를 이동하는 방법
             - 루트 노드로 이동 => `index = 1`
             - 부모 노드로 이동 => `index = index / 2`
             - 왼쪽 자식 노드로 이동 => `index = index * 2`
             - 오른쪽 자식 노드로 이동 => `index = index * 2 + 1`
+    - 시간복잡도: O(logn) (최악의 경우 skewed tree이면 O(n))
 
+<br>
+
+- **Binary Search Tree**
+    - 자식 노드의 수는 최대 2개
+    - 어떤 노드의 왼쪽 서브트리는 해당 노드 값보다 작은 값을 갖는 노드들로 이루어짐
+    - 어떤 노드의 오른쪽 서브트리는 해당 노드 값보다 큰 값을 갖는 노드들로 이루어짐
+        ![binary search tree.png](images/binary search tree.png)
 </details><hr>
 
 
