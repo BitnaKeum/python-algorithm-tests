@@ -98,6 +98,17 @@
         import sys
         sys.setrecursionlimit(10000)
         ```
+      
+    - 문자열의 특정 인덱스에서부터 찾기
+        - 검색은 특정 인덱스에서부터 하지만, **반환 값은 원본 문자열에서의 인덱스를 반환한다!**
+        ```python
+        s = 'abcba'
+        
+        s.find('a')     # 0 ('abcba'의 앞에서부터 검색)
+        s.find('a', 1)  # 4 ('bcba'의 앞에서부터 검색)
+        s.rfind('a')    # 4 ('abcba'의 뒤에서부터 검색)
+        s.rfind('a', 1) # 4 ('bcba'의 뒤에서부터 검색)
+        ```
     
     <br>
 
