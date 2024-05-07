@@ -6,12 +6,13 @@
   
 - O(1)
   - List에서 `pop()`
-  - deque에서 `pop()`, `popleft()`, `append()`, `appendleft()`
+  - deque에서 `pop()`/`popleft()`/`append()`/`appendleft()`
   - PriorityQueue에서 `get()`
-  - Dictionary(해시 테이블)에서 `in` 연산
+  - Dictionary(해시 테이블)에서 `in`/`del` 연산
+  - Set에서 `in`/`del` 연산
 - O(logn)
   - PriorityQueue에서 `put()`
-  - heapq에서 `heappush()`, `heappop()`
+  - heapq에서 `heappush()`/`heappop()`
   - 이진 탐색(Binary Search)
 - O(n)
   - List에서 `in` 연산
@@ -213,7 +214,26 @@
     print(num >> 1) # 4 (10진법) == 0100 (2진법)
     print(num >> 2) # 2 (10진법) == 0010 (2진법)
     ```
+  
+<br>
 
+- <b>차집합 구하기</b>
+
+    - 코드1. set으로 빼기
+        ```python
+        lis1 = ['a', 'b', 'b', 'c']
+        lis2 = ['b', 'd']
+        result = set(lis1) - set(lis2)  
+        result = list(result) # ['a', 'c']
+        ```
+    - 코드2. set의 `difference_update()` 이용
+        ```python
+        x = {"a", "b", "c"}
+        y = {"d", "e", "a"}
+        
+        x.difference_update(y)
+        print(x)    # {'c', 'b'}
+        ```
 
 </details><hr>
 
