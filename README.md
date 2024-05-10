@@ -111,7 +111,43 @@
         s.rfind('a', 1) # 4 ('bcba'의 뒤에서부터 검색)
         ```
     
-    <br>
+<br>
+
+- <b> 진법 변환하기 </b>
+
+    - n진법 → 10진법 변환: `int(수 문자열, n)`
+      
+        ```python
+        print(int('1000', 2))   # 8
+        ```
+    - 10진법 → 2진법 변환: `bin()`
+    
+      ```python
+      num = 8
+      print(bin(num))      # '0b1000'
+      print(bin(num)[2:])  # '1000
+      ```
+
+<br>
+
+- <b> Set 자료형 </b>
+
+    - 빈 Set 생성: `S = set()`
+        - _주의) `S = {}`로 쓰면 Dictionary 자료형으로 인식함_
+    - 채워진 Set 생성: `S = {1,2,3}`
+    - 원소 추가: `S.add()`
+        - 중복된 원소가 들어오면 **중복 제거**함
+        - 순서가 없으므로 순서가 유지되지 않음
+    - 원소 제거: `S.remove()`
+        - 해당 원소가 존재하지 않으면 Error 발생
+        - Error 발생하지 않게 제거하려면 `S.discard()` 사용
+    - `in` 연산 가능 _(시간복잡도: O(1))_
+    - 집합 연산
+        - 합집합: `S1 | S2`
+        - 교집합: `S1 & S2`
+        - 차집합: `S1 - S2`
+    
+<br>
 
 - <b>Slicing</b>
     - 리스트 슬라이싱 결과 값은 리스트형
@@ -318,28 +354,6 @@
 
 </details>
 <hr>
-
-
-<details>
-<summary><b> 진법 변환하기 </b></summary>
-
-- n진법 → 10진법 변환: `int(수 문자열, n)`
-  
-    ```python
-    print(int('1000', 2))   # 8
-    ```
-    
-<br>
-    
-- 10진법 → 2진법 변환: `bin()`
-
-  ```python
-  num = 8
-  print(bin(num))      # '0b1000'
-  print(bin(num)[2:])  # '1000
-  ```
-
-</details><hr>
 
 
 <details>
