@@ -209,7 +209,8 @@
     - 예시2
       
       `lis = ['eee', 'c', 'dd', 'bb', 'aaa']`일 때,
-      - `sorted(lis, key=lambda x: len(x)) # ['c', 'dd', 'bb', 'eee', 'aaa']`
+      - `sorted(lis, key=lambda x: len(x))`<br>
+        `sorted(lis, key=len) # ['c', 'dd', 'bb', 'eee', 'aaa']`
       - `sorted(lis, key=lambda x: (len(x), x)) # ['c', 'bb', 'dd', 'aaa', 'eee']`
       - `sorted(lis, key=lambda x: (-len(x), x)) # ['aaa', 'eee', 'bb', 'dd', 'c']`
         - 숫자 타입에 대해서는 `-`를 붙여서 내림차순 정렬을 할 수 있음!
