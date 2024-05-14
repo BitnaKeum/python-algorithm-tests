@@ -146,6 +146,7 @@
         - 합집합: `S1 | S2`
         - 교집합: `S1 & S2`
         - 차집합: `S1 - S2`
+            - 더 효율적인 방법: `S1.difference_update(S2)`
     
 <br>
 
@@ -186,31 +187,60 @@
     
 <br>
 
-- <b> 정렬하기 </b>
+- <b> 정렬 (Sorting) </b>
 
   - 리스트 정렬
   
-    `리스트.sort()` : 리스트에 정렬된 값을 저장<br>
-    `sorted(리스트)` : 리스트 값은 변하지 않고, 정렬된 값만 반환
+    `리스트.sort()` : 리스트 값 바뀜<br>
+    `sorted(리스트)` : 리스트 값 바뀌지 않음
     
+    <br>
+    
+    - 예시1
+
+        `lis = ["5e", "3a", "1a"]`일 때,
+      
+        1. 표현식 1개: 주어진 표현식을 기준으로 정렬<br>
+           `sorted(lis, key=lambda x: x[1])    # ['3a', '1a', '5e']`
+      
+        2) 표현식 2개: 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬<br>
+          `sorted(lis, key=lambda x: (x[1], x[0]))    # ['1a', '3a', '5e']`
+    
+    - 예시2
+      
+      `lis = ['eee', 'c', 'dd', 'bb', 'aaa']`일 때,
+      - `sorted(lis, key=lambda x: len(x)) # ['c', 'dd', 'bb', 'eee', 'aaa']`
+      - `sorted(lis, key=lambda x: (len(x), x)) # ['c', 'bb', 'dd', 'aaa', 'eee']`
+      - `sorted(lis, key=lambda x: (-len(x), x)) # ['aaa', 'eee', 'bb', 'dd', 'c']`
+        - 숫자 타입에 대해서는 `-`를 붙여서 내림차순 정렬을 할 수 있음!
+
+    <br><br>
+    
+  - 딕셔너리 정렬
+    
+      `sorted(딕셔너리)` : 딕셔너리는 바뀌지 않음
+  
+    <br>
+    
+    - 예시
+    
+      `d = {'b': 3, 'c': 1, 'a': 2}`일 때,
+      - `sorted(d)`<br>
+        `sorted(d.keys()) # ['a', 'b', 'c']`
+      - `sorted(d.items())`<br>
+        `sorted(d.items(), key=lambda x: x[0]) # [('a', 2), ('b', 3), ('c', 1)]`
+      - `sorted(d.values()) # [1, 2, 3]`
+      - `sorted(d.items(), key=lambda x: x[1]) # [('c', 1), ('a', 2), ('b', 3)]`
+      - `sorted(d.items(), key=lambda x: (x[0], x[1])) # [('a', 2), ('b', 3), ('c', 1)]`
+
     <br>
     
   - 문자열 정렬
   
-    `sorted(문자열)` : 문자열 값은 변하지 않고, 정렬된 값만 리스트로 반환<br>
+    `sorted(문자열)` : 문자열은 바뀌지 않음<br>
       
     <br>
-    
-  - `sort()`의 조건 지정하는 방법
 
-      `lis = ["5e", "3a", "1a"]`일 때,
-      
-      1. 표현식 1개: 해당 표현식을 기준으로 정렬<br>
-         `lis.sort(key=lambda x: x[1])    # ['3a', '1a', '5e']`
-      
-      2) 표현식 2개: 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬<br>
-        `lis.sort(key=lambda x: (x[1], x[0]))    # ['1a', '3a', '5e']`
-         
 <br>
 
 - <b> 문자열이 알파벳/숫자인지 확인 </b>
