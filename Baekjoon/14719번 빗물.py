@@ -14,25 +14,27 @@
 '''
 
 
-# --- 정답 답안 ---
+# --- 최적의 답안 (참고) ---
 H, W = map(int, input().split())
 blocks = list(map(int, input().split()))
 answer = 0
 
-m_left = blocks[0]
-for i in range(1, W - 1):
-    m_right = max(blocks[i + 1:])
+max_left = blocks[0]
+for idx in range(1, W - 1):
+    # max_left, max_right = max(blocks[:idx]), max(blocks[idx+1:]) # 이렇게 작성해도 되지만 line 22,31을 통해 효율성 높임
 
-    m = min(m_left, m_right)
-    if m - blocks[i] > 0:
-        answer += (m - blocks[i])
+    max_right = max(blocks[idx + 1:])
+    rain_height = min(max_left, max_right)
+    if rain_height - blocks[idx] > 0:
+        answer += (rain_height - blocks[idx])
 
-    m_left = max(m_left, blocks[i])
+    max_left = max(max_left, blocks[idx])
+
 print(answer)
 
 
 
-# --- 내가 작성한 틀린 답안 ---
+# --- 나의 오답 코드1 ---
 # queue를 이용해서 빗물이 고이는 양 옆의 벽을 찾도록 구현했다.
 # 웬만한 테스트케이스는 통과하는것 같은데 조건문도 많고 복잡하게 구현한 것 같아서 버림.
 # from collections import deque
@@ -54,4 +56,31 @@ print(answer)
 #             wall = min(q.popleft(), blocks[i])
 #             while q:
 #                 answer += (wall - q.popleft())
+# print(answer)
+
+
+# --- 나의 오답 코드2 ---
+# 핵심 풀이법은 떠올렸으나, 각 인덱스마다 반복하는 것이 아니라 해당 구간을 한꺼번에 계산하려고 해서 코드가 스파게티화됐고 결국 틀렸다.
+# H, W = map(int, input().split())
+# blocks = list(map(int, input().split()))
+# answer = 0
+#
+# idx = 1
+# while idx < W:
+#     max_left, max_right = max(blocks[:idx + 1]), max(blocks[idx + 1:])
+#     rain_height = min(max_left, max_right)
+#
+#     while idx < W:
+#         if blocks[idx] >= rain_height:
+#             break
+#         answer += (rain_height - blocks[idx])
+#         idx += 1
+#     # idx: 이전 step의 오른쪽 벽
+#
+#     while idx < W:
+#         if blocks[idx] < rain_height:
+#             break
+#         idx += 1
+#     # idx: 다음 step의 왼쪽 벽+1
+#
 # print(answer)
