@@ -102,6 +102,7 @@
       
     - 문자열의 특정 인덱스에서부터 찾기
         - 검색은 특정 인덱스에서부터 하지만, **반환 값은 원본 문자열에서의 인덱스를 반환한다!**
+        - _리스트에는 이 기능이 없음_
         ```python
         s = 'abcba'
         
@@ -191,19 +192,19 @@
 
   - 리스트 정렬
   
-    `리스트.sort()` : 리스트 값 바뀜<br>
-    `sorted(리스트)` : 리스트 값 바뀌지 않음
-    
-    <br>
-    
+    `리스트.sort()` : 원래 것 바뀜<br>
+    `sorted(리스트)` : 원래 것 바뀌지 않음
+
     - 예시1
 
         `lis = ["5e", "3a", "1a"]`일 때,
       
         1. 표현식 1개: 주어진 표현식을 기준으로 정렬<br>
+           - 주어진 표현식이 동일한 값들끼리는 기존 순서 유지<br>
+            
            `sorted(lis, key=lambda x: x[1])    # ['3a', '1a', '5e']`
       
-        2) 표현식 2개: 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬<br>
+        2. 표현식 2개: 첫 번째 표현식을 우선으로 하고, 첫 번째 표현식이 같을 경우 두 번째 표현식에 따라 정렬<br>
           `sorted(lis, key=lambda x: (x[1], x[0]))    # ['1a', '3a', '5e']`
     
     - 예시2
@@ -219,10 +220,7 @@
     
   - 딕셔너리 정렬
     
-      `sorted(딕셔너리)` : 딕셔너리는 바뀌지 않음
-  
-    <br>
-    
+    `sorted(딕셔너리)` : 원래 것 바뀌지 않음
     - 예시
     
       `d = {'b': 3, 'c': 1, 'a': 2}`일 때,
@@ -234,13 +232,13 @@
       - `sorted(d.items(), key=lambda x: x[1]) # [('c', 1), ('a', 2), ('b', 3)]`
       - `sorted(d.items(), key=lambda x: (x[0], x[1])) # [('a', 2), ('b', 3), ('c', 1)]`
 
-    <br>
+      <br>
     
   - 문자열 정렬
   
-    `sorted(문자열)` : 문자열은 바뀌지 않음<br>
-      
-    <br>
+    `sorted(문자열)` : 원래 것 바뀌지 않음<br>
+    - 예시: `sorted('zebra') # ['a', 'b', 'e', 'r', 'z']`
+      <br>
 
 <br>
 
@@ -255,12 +253,10 @@
 <br>
 
 - <b>XOR 연산</b>
-  
-  : 값이 0이면 1로, 1이면 0으로 만들기
-
   - `^` 연산은 int형 변수에만 가능, '0111'과 같은 문자열에는 불가
   
     ```python
+    # 값이 0이면 1로, 1이면 0으로 만들기
     num = 0
     print(num ^ 1)   # 1
     ```
@@ -424,7 +420,7 @@
     
     for i in range(2, int(n**0.5)+1): # 2 ~ √n
         # i의 배수들을 False 처리하기 (i 자신은 X)
-        for idx in range(i+i, n+1, i):
+        for idx in range(i*2, n+1, i):
             primes[idx] = False
     
     # 소수들을 출력
@@ -449,7 +445,7 @@
   for i in range(1, int(n**0.5)+1):
       if n % i == 0:    # i는 n의 약수
           div_list.append(i)
-          if n // i != i:   # n//i는 n의 약수
+          if n // i != i:   # n//i도 n의 약수
               div_list.append(n//i)
   div_list = sorted(div_list)   # 오름차순 정렬
   ```
@@ -495,7 +491,7 @@ def rotate(arr):    # arr는 이차원 배열
         print(node, end=' ')    # 출력
         for adj_node in graph[node]:
             if not visited[adj_node]:
-                dfs(graph, adj_node, visited)
+                dfs(adj_node)
     
     n = 5
     graph = [
@@ -578,7 +574,7 @@ def rotate(arr):    # arr는 이차원 배열
     queue.append(1)
     queue.popleft() # 3
     ```
-  - 주의) `append()`에 리스트를 전달하면 리스트 전체를 하나의 원소로 추가하므로, 이 경우 `extend()`를 사용
+  - 주의) 원소 추가 시, `append()`에 리스트를 넣으면 리스트 전체를 하나의 원소로 추가하므로 `extend()`를 사용
     ```python
     queue = deque()
     queue.append(0)
@@ -652,36 +648,52 @@ def rotate(arr):    # arr는 이차원 배열
 <details>
 <summary><b> Heap </b></summary>
 
+  <div style="text-align: center;">
+      <img alt="min heap.png" height="200" src="images/min_heap.png" width="200"/><br>
+  </div>
+
   - 최소값/최대값을 반복적으로 찾아야할 때 유용함
   - Heap은 완전이진트리이므로 높이가 logn => 모든 노드에 대해 연산을 해야하므로 시간복잡도는 O(nlogn)
   - pop 연산을 하면 루트 노드의 값이 반환됨 (min heap이면 최소값, max heap이면 최대값)
   - `heapq` 모듈은 min heap만을 지원함
-    - max heap을 사용해야한다면 원소를 모두 음수로 만들어서 사용하면 됨.
+    - max heap을 사용해야한다면 원소를 모두 음수로 만들어서 사용하면 됨
 
     ```python
     import heapq
     
     # heap을 만들면서 원소를 하나씩 집어넣기
     heap = []
-    heapq.heappush(heap, 1)
     heapq.heappush(heap, 2)
+    heapq.heappush(heap, 1)
     heapq.heappop(heap)  # 1
     ```
     ```python
     import heapq
     
     # 리스트를 한번에 heap으로 만들기
-    heap = [1, 2]
+    heap = [2, 1]
     heapq.heapify(heap)
     heapq.heappop(heap)  # 1
     ```
     
+
   - heap을 비우려면
     - `heap = []`로 리스트를 재생성해주면 됨
-      
+    
 
-  ![min heap.png](images/min heap.png)
-  - _Binary Search Tree의 성질과 헷갈리지 말 것!_
+  - 리스트/튜플 원소로 구성된 리스트는 `heapify()`를 해도 정렬이 안된다
+    ```python
+    heap = [(9,1), (1,2), (3,4), (8,7)]
+    heapq.heapify(heap) # [(1,2), (8,7), (3,4), (9,1)]
+    
+    heap = [[9,1], [1,2], [3,4], [8,7]]
+    heapq.heapify(heap) # [[1,2], [8,7], [3,4], [9,1]]
+    
+    heap = [[9], [1], [3], [8]]
+    heapq.heapify(heap) # [[1], [8], [3], [9]]
+    ```
+    
+  - Binary Search Tree의 성질과 헷갈리지 말 것!
 
 </details><hr>
 
