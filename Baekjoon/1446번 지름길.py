@@ -1,6 +1,10 @@
 # 백준 1446번 지름길 문제 (실버1)
 # https://www.acmicpc.net/problem/1446
 
+'''
+두번째 시도 -> 답안2랑 똑같이 작성
+'''
+
 
 # --- 답안1. 최적의 답안 ---
 '''
@@ -51,24 +55,23 @@ print(dist[D])
 
 현재 위치에서 시작하는 지름길이 선택되었다면, 단축된 거리만큼 이후의 모든 거리 값으로부터 빼준다.
 '''
-from queue import PriorityQueue
+import heapq
 
 N, D = map(int, input().split())
-dist = list(range(D + 1))
-q = PriorityQueue()
-
+shortcuts = []
+heapq.heapify(shortcuts)
 for _ in range(N):
-    s, e, d = map(int, input().split())
-    if e > D or e - s < d:
+    start, end, dist = map(int, input().split())
+    if end > D or end - start <= dist:
         continue
-    q.put((e, s, d))  # 도착위치가 작은 순으로 저장
+    heapq.heappush(shortcuts, (end, start, dist))   # 도착 위치를 기준으로 정렬
+distance = list(range(D + 1))
 
-while q.qsize() > 0:
-    e, s, d = q.get()
+while shortcuts:
+    end, start, dist = heapq.heappop(shortcuts)
+    if distance[end] > distance[start] + dist:
+        gap = distance[end] - (distance[start] + dist)
+        for j in range(end, D + 1):
+            distance[j] -= gap
 
-    diff = dist[e] - (dist[s] + d)
-    dist[e] = min(dist[e], dist[s] + d)
-    if dist[e] == (dist[s] + d):
-        for i in range(e + 1, D + 1):
-            dist[i] -= diff
-print(dist[D])
+print(distance[D])
