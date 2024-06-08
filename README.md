@@ -681,16 +681,23 @@ def rotate(arr):    # arr는 이차원 배열
     - `heap = []`로 리스트를 재생성해주면 됨
     
 
-  - 리스트/튜플 원소로 구성된 리스트는 `heapify()`를 해도 정렬이 안된다
+  - 주의) `heapify()`의 효과
+    - 리스트가 정렬됨 (X)
+    - 항상 최소값을 root에 배치함으로써 `heappop()`을 통해 최소값을 얻음 (O)
     ```python
-    heap = [(9,1), (1,2), (3,4), (8,7)]
-    heapq.heapify(heap) # [(1,2), (8,7), (3,4), (9,1)]
+    heap = [9,1,3,8]
+    heapq.heapify(heap) # [1, 8, 3, 9]
+    heapq.heappop(heap) # 1
+    heapq.heappop(heap) # 3
+    heapq.heappop(heap) # 8
+    heapq.heappop(heap) # 9
     
-    heap = [[9,1], [1,2], [3,4], [8,7]]
-    heapq.heapify(heap) # [[1,2], [8,7], [3,4], [9,1]]
-    
-    heap = [[9], [1], [3], [8]]
-    heapq.heapify(heap) # [[1], [8], [3], [9]]
+    heap = [(9, 1), (1 ,2), (3, 4), (8, 7)]
+    heapq.heapify(heap) # [(1, 2), (8, 7), (3, 4), (9, 1)]
+    heapq.heappop(heap) # (1, 2)
+    heapq.heappop(heap) # (3, 4)
+    heapq.heappop(heap) # (8, 7)
+    heapq.heappop(heap) # (9, 1)
     ```
     
   - Binary Search Tree의 성질과 헷갈리지 말 것!
@@ -718,7 +725,11 @@ def rotate(arr):    # arr는 이차원 배열
     - 자식 노드의 수는 최대 2개
     - 어떤 노드의 왼쪽 서브트리는 해당 노드 값보다 작은 값을 갖는 노드들로 이루어짐
     - 어떤 노드의 오른쪽 서브트리는 해당 노드 값보다 큰 값을 갖는 노드들로 이루어짐
-        ![binary search tree.png](images/binary search tree.png)
+    
+    <div style="text-align: center;">
+        <img alt="binary search tree.png" width="260" height="160" src="images/binary_search_tree.png"/><br>
+    </div>
+
 </details><hr>
 
 
@@ -726,7 +737,7 @@ def rotate(arr):    # arr는 이차원 배열
 <summary><b> 이진 탐색 (Binary Search)</b></summary>
 
   : start, mid, end를 사용하면서, mid의 값이 찾는 값과 일치하는지 확인을 반복하는 방법
-  - 이진 탐색을 사용하려면 리스트가 **정렬**되어 있어야함!
+  - 조건: 리스트가 **정렬**되어 있어야함!
   - 값의 갯수 or 범위가 엄청 클 때 많이 사용
   - 시간복잡도: O(logn)
   - **코딩테스트 자주 출제** 
@@ -735,11 +746,12 @@ def rotate(arr):    # arr는 이차원 배열
 
   - 코드1. 재귀로 구현
     ```python
-    arr = [0,2,4,6,8]
+    arr = [8,4,0,2,6]
+    arr.sort() # 정렬 필수!
     target = 4
-    
+            
     def binary_search(start, end):
-        if start > end: # 해당 값이 없는 경우
+        if start > end:
             return -1
         
         mid = (start + end) // 2
@@ -747,22 +759,22 @@ def rotate(arr):    # arr는 이차원 배열
             return mid
         elif arr[mid] > target:
             # end = mid - 1
-            return binary_search(arr, target, start, mid-1)
+            binary_search(start, mid - 1)
         else:
-            # start = mid +1
-            return binary_search(arr, target, mid+1, end)
-        
-    binary_search(0, len(arr)-1)  # 2
+            # start = mid + 1
+            binary_search(mid + 1, end)
+            
+    binary_search(0, len(arr)-1) # 2
     ```
   - 코드2. 반복문으로 구현
     ```python
-    arr = [0,2,4,6,8]
+    arr = [8,4,0,2,6]
+    arr.sort() # 정렬 필수!
     target = 4
     
     def binary_search(start, end):
         while start <= end:
             mid = (start + end) // 2
-            
             if arr[mid] == target:
                 return mid
             elif arr[mid] > target:
@@ -796,9 +808,9 @@ def rotate(arr):    # arr는 이차원 배열
             end += 1
             sum += end
         elif sum == k:
+            answer += 1
             end += 1
             sum += end
-            answer += 1
         else:
             start += 1
             sum -= start
@@ -1052,6 +1064,7 @@ def rotate(arr):    # arr는 이차원 배열
 - 특징
   - 노드 간 거리가 주어지는 방향 그래프여야 함 
   - 거리는 모두 **양수**여야 함
+  - 가중치의 합이 최소가 되는 경로를 찾음
 - 시간복잡도: O(ElogV)
 
 
